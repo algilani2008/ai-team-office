@@ -308,7 +308,7 @@ label.chk input{width:auto}
     <span class="dept">تعرض مهام: <b id="filterName"></b></span>
     <button class="btn sm" id="clearFilter">مسح الفلتر</button>
   </div>
-  <div class="board">
+  <div class="board" id="board">
     <div class="col"><h3>جديدة</h3><div id="c0"></div></div>
     <div class="col"><h3>قيد التنفيذ</h3><div id="c1"></div></div>
     <div class="col"><h3>خلصت</h3><div id="c2"></div></div>
@@ -360,7 +360,7 @@ label.chk input{width:auto}
 <div id="archiveView">
   <div class="card" style="margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
     <div><h2 style="margin:0">سجل الاجتماعات</h2><p class="role">كل اجتماع تختمه ينحفظ هنا تلقائياً.</p></div>
-    <button class="btn dark sm" id="weeklyReportBtn">تقرير الأسبوع</button>
+    <div class="row"><button class="btn sm" id="backupBtn">⬇️ نسخة احتياطية (JSON)</button><button class="btn dark sm" id="weeklyReportBtn">تقرير الأسبوع</button></div>
   </div>
   <div id="reportOut" class="meetOut" style="display:none;margin-bottom:14px"></div>
   <div id="archiveList"></div>
@@ -1122,7 +1122,7 @@ function companyBlock(){return COMPANY.trim()?"## عن الشركة (معلوم�
 let DB=null,DB_READY=false;
 async function dbSetSafe(path,data){
   if(!DB)return;
-  try{await DB.doc(path).set(data);}catch(_){}
+  try{await DB.doc(path).set(data);}catch(err){console.warn("فشلت مزامنة السحابة لـ "+path+":",err&&err.message?err.message:err)}
 }
 async function dbInit(){
   try{DB=await claude.use("db");}catch(_){DB=null;}
@@ -1212,7 +1212,7 @@ function fullPrompt(e){
 
 // panel
 const panel=document.getElementById("panel");
-function esc(s){return s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 function renderIntro(){
   panel.innerHTML='<h2>أهلاً في مكتبك</h2><p class="role" style="margin-top:6px">هذا فريقك من موظفين الذكاء الاصطناعي. كل موظف له وصف وظيفي، ومهام يومية، وتعليمات تشغيل جاهزة.</p><h3>كيف تستخدمه</h3><ul><li>اضغط على أي موظف تشوف شغله وتكلمه.</li><li>«ابدأ اجتماع» يجمع الكل في غرفة الاجتماعات.</li><li>«لوحة المهام» توزّع فيها الشغل، ورامي يتابع.</li></ul><h3>كيف يتطورون</h3><ul><li>كل رد تقيّمه بـ 👍 أو 👎 يعلّمهم.</li><li>كل 3 رسائل يستخلص الموظف دروس ويحفظها.</li><li>زر «طوّر نفسك» يخليه يراجع نفسه كخبير ويقترح مهارات أقوى تعتمدها.</li><li>نقاط الخبرة ترقّيهم: متدرّب ← موظف ← محترف ← خبير ← أسطورة.</li></ul>';
 }
@@ -1228,7 +1228,7 @@ function select(id){
    '<textarea id="ask" placeholder="اكتب لـ '+e.name+'... (Enter للإرسال)"></textarea>'+
    '<div class="row" style="align-items:center"><button class="btn dark sm" id="chatSend">أرسل</button><button class="btn sm" id="micChat" style="'+(DICT?'':'display:none')+'">🎤 تكلّم</button><label class="chk"><input type="checkbox" id="strong"'+(STRONG[e.id]?' checked':'')+'> وضع قوي</label><label class="chk" style="'+(engine()!=="none"?'':'display:none')+'"><input type="checkbox" id="autoV"'+(AUTOV[e.id]?' checked':'')+'> رد صوتي</label><button class="btn sm" id="chatClear">مسح المحادثة</button></div>'+
    '<p class="hint" id="chatNote">المحادثة هنا تشتغل على Claude. قيّم الردود بـ 👍 أو 👎 عشان يتعلم.</p>'+
-   '<div class="row" style="align-items:center"><select id="handoffWho">'+EMP.filter(x=>x.id!==e.id).map(x=>'<option value="'+x.id+'">'+x.name+' — '+x.role+'</option>').join("")+'</select><button class="btn sm" id="handoffBtn">سلّم آخر رد لزميل</button></div>'+
+   '<div class="row" style="align-items:center"><select id="handoffWho">'+EMP.filter(x=>x.id!==e.id).map(x=>'<option value="'+esc(x.id)+'">'+esc(x.name)+' — '+esc(x.role)+'</option>').join("")+'</select><button class="btn sm" id="handoffBtn">سلّم آخر رد لزميل</button></div>'+
    '<div class="tabs2"><button class="on" data-t="skills">المهارات</button><button data-t="tasks">المهام</button><button data-t="grow">التطوير</button><button data-t="more">الإعدادات</button></div>'+
    '<div data-p="skills"><h3>المهارات</h3><div class="skills">'+allSkills(e).map((s,i)=>'<span class="sk'+(i>=D.skills.length?' new':'')+'">'+esc(s)+'</span>').join("")+'</div>'+
      '<h3>مؤشرات الأداء</h3>'+list(D.kpis)+'<h3>الوصف الوظيفي</h3><p>'+e.job+'</p></div>'+
@@ -1478,7 +1478,10 @@ document.getElementById("micReply").onclick=ev=>micClick(ev.currentTarget,docume
 // ===== المحادثة داخل الصفحة (Claude) =====
 let CHATS={};try{CHATS=JSON.parse(localStorage.getItem("aiOfficeChats")||"{}")||{}}catch(e){}
 const STRONG={},AUTOV={};const BUSY={};
-function saveChats(){try{localStorage.setItem("aiOfficeChats",JSON.stringify(CHATS))}catch(e){}}
+function saveChats(){
+  try{Object.keys(CHATS).forEach(id=>{if(Array.isArray(CHATS[id])&&CHATS[id].length>40)CHATS[id]=CHATS[id].slice(-40)})}catch(_){}
+  try{localStorage.setItem("aiOfficeChats",JSON.stringify(CHATS))}catch(e){toast("تعذّر حفظ المحادثة محلياً (المساحة ممتلئة؟) — التنفيذ الفعلي ما تأثر")}
+}
 let _sample;
 function getSample(){
   if(_sample!==undefined)return Promise.resolve(_sample);
@@ -1624,6 +1627,7 @@ const WORKER_CODE=[
 async function callModel(e,input,opts){
   opts=opts||{};
   const ep=e&&ENDPOINTS[e.tool];
+  let epErr=null;
   if(ep&&ep.url){
     try{
       const messages=Array.isArray(input)?input:[{role:"user",content:input}];
@@ -1635,19 +1639,20 @@ async function callModel(e,input,opts){
       if(opts.onText)opts.onText({text});
       return {text};
     }catch(err){
-      toast((TOOLS[e.tool]?TOOLS[e.tool].name:"الخادم الخارجي")+" ما رد ("+(err&&err.message?err.message:"خطأ")+")، رجعنا لـ Claude مؤقتاً");
+      epErr=err&&err.message?err.message:"خطأ غير معروف من الخادم";
+      toast((TOOLS[e.tool]?TOOLS[e.tool].name:"الخادم الخارجي")+" ما رد ("+epErr+")، رجعنا لـ Claude مؤقتاً");
     }
   }
   const s=await getSample();
-  if(!s)throw {code:"not_granted"};
+  if(!s)throw {code:"not_granted",message:epErr?("فشل خادم "+(TOOLS[e&&e.tool]?TOOLS[e.tool].name:"المنصة")+" ("+epErr+") وما عندك إذن Claude كخيار بديل"):undefined};
   return s(input,opts);
 }
 function renderChat(e){
   const log=document.getElementById("chatLog");if(!log||state.sel!==e.id)return;
   const list=CHATS[e.id]||[];
   log.innerHTML=list.length?list.map((m,i)=>m.role==="user"?'<div class="msg me">'+esc(m.content)+'</div>':
-    '<div class="msg ai">'+esc(m.content)+(m.content!=="..."&&!BUSY[e.id]?'<div class="fb">'+(m.fb?'<span>'+(m.fb>0?'👍 قيّمته':'👎 سجّل ملاحظتك')+'</span>':'<button data-up="'+i+'">👍</button><button data-down="'+i+'">👎</button>')+(engine()!=="none"?'<button data-say="'+i+'">🔊</button>':'')+'</div>':'')+(m.ask?'<div class="row"><input id="fbIn" placeholder="وش كان الخطأ؟ وش تبيه يسوي بدلها؟"><button class="btn sm" id="fbSave">علّمه</button></div>':'')+'</div>'
-  ).join(""):'<p class="hint">ابدأ المحادثة مع '+e.name+'.</p>';
+    '<div class="msg ai">'+esc(m.content)+(m.content!=="..."&&!m.pending&&!m.failed&&!BUSY[e.id]?'<div class="fb">'+(m.fb?'<span>'+(m.fb>0?'👍 قيّمته':'👎 سجّل ملاحظتك')+'</span>':'<button data-up="'+i+'">👍</button><button data-down="'+i+'">👎</button>')+(engine()!=="none"?'<button data-say="'+i+'">🔊</button>':'')+'</div>':'')+(m.ask?'<div class="row"><input id="fbIn" placeholder="وش كان الخطأ؟ وش تبيه يسوي بدلها؟"><button class="btn sm" id="fbSave">علّمه</button></div>':'')+'</div>'
+  ).join(""):'<p class="hint">ابدأ المحادثة مع '+esc(e.name)+'.</p>';
   log.scrollTop=log.scrollHeight;
   log.querySelectorAll("[data-up]").forEach(b=>b.onclick=()=>{list[+b.dataset.up].fb=1;saveChats();addXp(e,5,"👍 "+e.name+" أخذ +5 خبرة");say(e.id,"شكراً! بكمل على نفس المستوى");renderChat(e)});
   log.querySelectorAll("[data-down]").forEach(b=>b.onclick=()=>{list.forEach(m=>m.ask=false);list[+b.dataset.down].ask=true;renderChat(e);const f=document.getElementById("fbIn");f&&f.focus()});
@@ -1666,15 +1671,22 @@ function buildMsgs(e,hist){
 }
 function handoff(from,toId){
   const list=CHATS[from.id]||[];
-  const last=[...list].reverse().find(m=>m.role==="assistant"&&m.content&&m.content!=="...");
+  const last=[...list].reverse().find(m=>m.role==="assistant"&&m.content&&m.content!=="..."&&!m.pending&&!m.failed);
   if(!last){toast("ما فيه رد نسلّمه بعد");return}
   const to=byId(toId);
+  if(!to){toast("ما فيه زميل بهذا المعرّف");return}
   CHATS[toId]=(CHATS[toId]||[]);
   CHATS[toId].push({role:"user",content:"تسليم شغل من "+from.name+" ("+from.role+"):\n\n"+last.content+"\n\nراجعها وكمّل من زاويتك."});
   saveChats();
-  const t=place(from.id,[to.home[0]+4,to.home[1]]);
-  say(from.id,"خذها يا "+to.name+"، كمّل عليها");
-  setTimeout(()=>{say(to.id,"وصلتني، شاكر لك");if(!INMEET.has(from.id))place(from.id,from.home)},t+1200);
+  const fromHome=Array.isArray(from.home)?from.home:null;
+  const toHome=Array.isArray(to.home)?to.home:null;
+  if(toHome){
+    const t=place(from.id,[toHome[0]+4,toHome[1]]);
+    say(from.id,"خذها يا "+to.name+"، كمّل عليها");
+    setTimeout(()=>{say(to.id,"وصلتني، شاكر لك");if(!INMEET.has(from.id)&&fromHome)place(from.id,fromHome)},t+1200);
+  }else{
+    say(from.id,"خذها يا "+to.name+"، كمّل عليها");
+  }
   toast("سلّمت آخر رد من "+from.name+" إلى "+to.name);
   select(toId);
 }
@@ -1733,8 +1745,11 @@ function hireTool(){
 }
 // ===== تفويض حقيقي: أي موظف يقدر يحوّل المهمة فعلياً لزميل مختص وينفّذها بنفس الرد (لا حدود على قائمة معيّنة) =====
 const MAX_DELEGATE_DEPTH=3;
-function delegateTool(fromEmp,depth){
-  depth=depth||0;
+let DELEGATION_LOG=[];try{DELEGATION_LOG=JSON.parse(localStorage.getItem("aiOfficeDelegLog")||"null")||[]}catch(_){DELEGATION_LOG=[]}
+function saveDelegLog(){if(DELEGATION_LOG.length>200)DELEGATION_LOG=DELEGATION_LOG.slice(-200);try{localStorage.setItem("aiOfficeDelegLog",JSON.stringify(DELEGATION_LOG))}catch(_){}dbSetSafe("delegationLog/all",{items:DELEGATION_LOG,updatedAt:Date.now()});}
+function delegateTool(fromEmp,depth=0,chain,budget){
+  chain=chain||[fromEmp.id];
+  budget=budget||{remaining:8};
   return {
     name:"delegate_task",
     description:"تحوّل مهمة فعلياً لموظف آخر في المكتب الافتراضي عشان ينفّذها الآن (أو يحوّلها هو بنفسه لمن تحته لو احتاج)، وترجع لك نتيجتها الحقيقية كاملة. استخدمها كل ما كان الطلب يخص تخصص موظف ثاني، وإذا الطلب فيه أكثر من مهمة لأكثر من شخص استخدمها أكثر من مرة في نفس الرد — مرة لكل شخص.",
@@ -1749,11 +1764,15 @@ function delegateTool(fromEmp,depth){
     async execute(input,context){
       const target=resolveEmp(input&&input.employee_id);
       if(!target)throw new Error("ما فيه موظف بهذا المعرّف أو اسم قريب منه: "+(input&&input.employee_id));
-      if(target.id===fromEmp.id)throw new Error("اختر موظف ثاني غير نفسك");
+      if(chain.includes(target.id))throw new Error("هذا الموظف موجود أصلاً في سلسلة التفويض الحالية — اختر موظف ثاني تجنّب الحلقة");
+      if(budget.remaining<=0)throw new Error("وصلت الحد الأقصى من التفويضات المسموحة بنفس الطلب (8) — نفّذ الباقي بطلب ثاني");
+      budget.remaining--;
       const task=String(input&&input.task||"").trim();
       if(!task)throw new Error("لازم وصف واضح للمهمة");
       const title=task.slice(0,140);
-      tasks.push({title,who:target.id,s:1});
+      // مرجع مباشر لنفس الكائن (object reference) — بدون أي بحث لاحق بالعنوان، حتى لو فيه تفويضان متزامنان بنفس العنوان لنفس الموظف ما يتلخبطون
+      const taskRecord={id:(crypto&&crypto.randomUUID?crypto.randomUUID():("t"+Date.now()+Math.random())),title,who:target.id,from:fromEmp.id,s:1,createdAt:Date.now()};
+      tasks.push(taskRecord);
       try{save();if(typeof renderBoard==="function")renderBoard()}catch(_){/* عطل عرض اللوحة ثانوي — ما يوقف تنفيذ المهمة الحقيقي */}
       try{
         say(fromEmp.id,"أحوّلها لـ "+target.name);
@@ -1763,24 +1782,32 @@ function delegateTool(fromEmp,depth){
       }catch(_){/* حركة الطابق ثانوية — ما توقف التنفيذ الفعلي للمهمة */}
       const list=CHATS[target.id]=(CHATS[target.id]||[]);
       list.push({role:"user",content:"مهمة محوّلة من "+fromEmp.name+" ("+fromEmp.role+") بناءً على طلب المدير مباشرة:\n\n"+task});
-      list.push({role:"assistant",content:"..."});
+      const reply={role:"assistant",content:"...",pending:true};
+      list.push(reply);
       if(state.sel===target.id)renderChat(target);
+      const t0=Date.now();
       let resultText="";
       try{
         const nestedOpts={modelTier:"default",cache:false,signal:context&&context.signal};
         if(depth<MAX_DELEGATE_DEPTH&&!ENDPOINTS[target.tool]){
-          nestedOpts.tools=target.id==="noor"?[hireTool(),delegateTool(target,depth+1)]:[delegateTool(target,depth+1)];
+          nestedOpts.tools=target.id==="noor"?[hireTool(),delegateTool(target,depth+1,[...chain,target.id],budget)]:[delegateTool(target,depth+1,[...chain,target.id],budget)];
         }
-        const r=await callModel(target,buildMsgs(target,list.slice(0,-1).slice(-12)),nestedOpts);
-        resultText=r.text||"تم.";
+        const histForModel=list.slice(0,list.indexOf(reply)).filter(m=>!m.pending&&!m.failed).slice(-12);
+        const r=await callModel(target,buildMsgs(target,histForModel),nestedOpts);
+        resultText=(r&&typeof r.text==="string"?r.text.trim():"")||"";
+        if(!resultText)throw new Error("رجع "+target.name+" بدون نتيجة فعلية");
       }catch(err){
-        list[list.length-1].content="صار خطأ أثناء التنفيذ"+(err&&err.message?": "+err.message:"")+" — جرّب تفتح محادثته مباشرة.";
+        reply.pending=false;reply.failed=true;
+        reply.content="صار خطأ أثناء التنفيذ"+(err&&err.message?": "+err.message:"")+" — جرّب تفتح محادثته مباشرة.";
         saveChats();if(state.sel===target.id)renderChat(target);
+        // المهمة ترجع «جديدة» بدل ما تعلّق إلى الأبد على «قيد التنفيذ»
+        if(tasks.includes(taskRecord)&&taskRecord.s===1){taskRecord.s=0;taskRecord.error=reply.content;save();try{renderBoard()}catch(_){}}
+        DELEGATION_LOG.push({from:fromEmp.id,to:target.id,title,ok:false,ms:Date.now()-t0,at:Date.now()});saveDelegLog();
         throw new Error((err&&err.message)||("ما قدر "+target.name+" ينفّذ المهمة الحين"));
       }
-      list[list.length-1].content=resultText;saveChats();if(state.sel===target.id)renderChat(target);
-      const ti=tasks.lastIndexOf([...tasks].reverse().find(tt=>tt.who===target.id&&tt.s===1&&tt.title===title));
-      if(ti>=0){tasks[ti].s=2;try{save();if(typeof renderBoard==="function")renderBoard()}catch(_){}}
+      reply.pending=false;reply.content=resultText;saveChats();if(state.sel===target.id)renderChat(target);
+      if(tasks.includes(taskRecord)&&taskRecord.s===1){taskRecord.s=2;taskRecord.completedAt=Date.now();taskRecord.result=resultText;try{save();renderBoard()}catch(_){}}
+      DELEGATION_LOG.push({from:fromEmp.id,to:target.id,title,ok:true,ms:Date.now()-t0,at:Date.now()});saveDelegLog();
       try{addXp(target,10);say(target.id,"خلصت المهمة ✔")}catch(_){}
       return "نفّذها "+target.name+" فعلياً، وهذي نتيجته الكاملة:\n\n"+resultText;
     }
@@ -1788,23 +1815,26 @@ function delegateTool(fromEmp,depth){
 }
 async function chat(e){
   const ask=document.getElementById("ask");const q=ask.value.trim();if(!q||BUSY[e.id])return;
+  BUSY[e.id]=true; // يصير مقفول فوراً قبل أي انتظار غير متزامن، عشان ضغطتين سريعتين ما يرسلون رسالتين متداخلتين
   const s=await getSample();
-  if(!s&&!ENDPOINTS[e.tool]){document.getElementById("chatNote").textContent="المحادثة داخل الصفحة تشتغل بس لما تفتحها من claude.ai، أو لما تربط رابط خادم فعلي لمنصة "+e.name+" من تبويب «الإعدادات».";return}
-  ask.value="";BUSY[e.id]=true;
-  const list=CHATS[e.id]=(CHATS[e.id]||[]);list.forEach(m=>m.ask=false);list.push({role:"user",content:q});list.push({role:"assistant",content:"..."});
+  if(!s&&!ENDPOINTS[e.tool]){BUSY[e.id]=false;if(state.sel===e.id){const n=document.getElementById("chatNote");if(n)n.textContent="المحادثة داخل الصفحة تشتغل بس لما تفتحها من claude.ai، أو لما تربط رابط خادم فعلي لمنصة "+e.name+" من تبويب «الإعدادات».";}return}
+  ask.value="";
+  const list=CHATS[e.id]=(CHATS[e.id]||[]);list.forEach(m=>m.ask=false);list.push({role:"user",content:q});
+  const reply={role:"assistant",content:"...",pending:true};list.push(reply);
   renderChat(e);say(e.id,"لحظة، أشتغل عليها");
-  const msgs=buildMsgs(e,list.slice(0,-1).slice(-12));
+  const msgs=buildMsgs(e,list.slice(0,list.indexOf(reply)).filter(m=>!m.pending&&!m.failed).slice(-12));
   let ok=false;
   try{
-    const callOpts={modelTier:STRONG[e.id]?"complex":"default",cache:false,onText:({text})=>{list[list.length-1].content=text;renderChat(e)}};
+    const callOpts={modelTier:STRONG[e.id]?"complex":"default",cache:false,onText:({text})=>{reply.content=text;renderChat(e)}};
     if(e.id==="noor"&&!ENDPOINTS[e.tool])callOpts.tools=[hireTool(),delegateTool(e)];
     else if(!ENDPOINTS[e.tool])callOpts.tools=[delegateTool(e)];
     const r=await callModel(e,msgs,callOpts);
-    list[list.length-1].content=r.text||list[list.length-1].content;say(e.id,"خلصت ✔");ok=true;if(AUTOV[e.id])speakOne(e.id,list[list.length-1].content);
+    reply.content=r.text||reply.content;say(e.id,"خلصت ✔");ok=true;if(AUTOV[e.id])speakOne(e.id,reply.content);
   }catch(err){
-    list[list.length-1].content=err&&err.code==="rate_limited"?"وصلت الحد المؤقت، جرّب بعد شوي.":(err&&err.code==="not_granted"?"ما انعطت الصفحة إذن تكلم Claude.":"صار خطأ"+(err&&err.message?": "+err.message:""));
+    reply.failed=true;
+    reply.content=err&&err.code==="rate_limited"?"وصلت الحد المؤقت، جرّب بعد شوي.":(err&&err.code==="not_granted"?(err.message||"ما انعطت الصفحة إذن تكلم Claude."):"صار خطأ"+(err&&err.message?": "+err.message:""));
   }
-  BUSY[e.id]=false;saveChats();renderChat(e);
+  reply.pending=false;BUSY[e.id]=false;saveChats();renderChat(e);
   if(ok){addXp(e,10);const G=g(e);G.msgs=(G.msgs||0)+1;saveGrow();if(G.msgs%3===0)reflect(e,null,list.slice(-6))}
 }
 // يتعلم تلقائياً من المحادثة
@@ -1880,8 +1910,8 @@ function renderEmpGrid(){
     const mine=tasks.filter(t=>t.who===e.id);
     const done=mine.filter(t=>t.s===2).length,busyTask=mine.find(t=>t.s===1);
     const pct=mine.length?Math.round(done/mine.length*100):0;
-    return '<div class="empCard'+(EMPFILTER===e.id?' active':'')+'" data-ec="'+e.id+'"><span class="badge '+(busyTask?"busy":"idle")+'"></span>'+
-      '<div class="nm">'+e.name+'</div><div class="rl">'+e.role+'</div>'+
+    return '<div class="empCard'+(EMPFILTER===e.id?' active':'')+'" data-ec="'+esc(e.id)+'"><span class="badge '+(busyTask?"busy":"idle")+'"></span>'+
+      '<div class="nm">'+esc(e.name)+'</div><div class="rl">'+esc(e.role)+'</div>'+
       '<div class="cur'+(busyTask?'':' none')+'">'+(busyTask?'⚙️ '+esc(busyTask.title):'متفرّغ الحين')+'</div>'+
       '<div class="pbar"><i style="width:'+pct+'%"></i></div><div class="pct">'+done+'/'+mine.length+' مهام · '+pct+'%</div></div>';
   }).join("");
@@ -1902,24 +1932,42 @@ function renderBoard(){
   [0,1,2].forEach(c=>{
     document.getElementById("c"+c).innerHTML=visible.filter(o=>o.t.s===c).map(({t,i})=>{
       const e=byId(t.who);if(!e)return "";const T=TOOLS[e.tool]||{color:"#999",name:"—"};
-      return '<div class="task">'+esc(t.title)+'<div class="meta"><span><i class="dot" style="background:'+T.color+'"></i> '+e.name+' · '+T.name+'</span><span>'+
+      return '<div class="task">'+esc(t.title)+'<div class="meta"><span><i class="dot" style="background:'+T.color+'"></i> '+esc(e.name)+' · '+esc(T.name)+'</span><span>'+
         (c>0?'<button class="btn sm" data-mv="'+i+'" data-d="-1">→</button> ':'')+
         (c<2?'<button class="btn sm" data-mv="'+i+'" data-d="1">←</button> ':'')+
         '<button class="btn sm" data-del="'+i+'">✕</button></span></div></div>';
     }).join("")||'<p class="hint">لا يوجد</p>';
   });
-  document.querySelectorAll("[data-mv]").forEach(b=>b.onclick=()=>{
-    const t=tasks[+b.dataset.mv];t.s=Math.min(2,Math.max(0,t.s+ +b.dataset.d));save();renderBoard();
+}
+// مستمع واحد على كل لوحة المهام (Event Delegation) بدل ربط كل زر من جديد عند كل renderBoard — أخف وأسرع مع كثرة المهام
+document.getElementById("board").addEventListener("click",ev=>{
+  const mv=ev.target.closest("[data-mv]");
+  if(mv){
+    const t=tasks[+mv.dataset.mv];if(!t)return;
+    t.s=Math.min(2,Math.max(0,t.s+ +mv.dataset.d));save();renderBoard();
     if(t.s===2){toast("📞 رامي: التيم خلّص المهمة: "+t.title);say("rami","التيم خلّص: "+t.title,4500)}
     else if(t.s===1){say(t.who,"بدأت في: "+t.title)}
-  });
-  document.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{tasks.splice(+b.dataset.del,1);save();renderBoard()});
-}
+    return;
+  }
+  const del=ev.target.closest("[data-del]");
+  if(del){tasks.splice(+del.dataset.del,1);save();renderBoard();return}
+});
 document.getElementById("clearFilter").onclick=()=>{EMPFILTER=null;renderBoard()};
 renderBoard();
 document.getElementById("companyTxt").value=COMPANY;
 document.getElementById("saveCompany").onclick=()=>{COMPANY=document.getElementById("companyTxt").value;saveCompany();document.getElementById("companyNote").textContent="انحفظت، وصار كل موظف يعرفها.";toast("انحفظت معلومات الشركة")};
 document.getElementById("weeklyReportBtn").onclick=weeklyReport;
+document.getElementById("backupBtn").onclick=async()=>{
+  if(!window.claude||!window.claude.use){toast("التنزيل يشتغل بس من claude.ai");return}
+  try{
+    const downloads=await claude.use("downloads");
+    if(!downloads){toast("التنزيل مو متاح بهذي الصفحة");return}
+    const payload={exportedAt:new Date().toISOString(),tasks,ARCHIVE,EXTRA_HIRES,GROW,COMPANY,delegationLog:DELEGATION_LOG};
+    const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
+    await downloads.save({filename:"ai-office-backup-"+new Date().toISOString().slice(0,10)+".json",data:blob});
+    toast("انحفظت النسخة الاحتياطية ✔");
+  }catch(err){toast("ما قدر يحفظ النسخة الاحتياطية"+(err&&err.message?": "+err.message:""))}
+};
 async function weeklyReport(){
   const out=document.getElementById("reportOut");out.style.display="";out.innerHTML='<p class="hint">رامي يجمع التقرير...</p>';
   say("rami","أجهز تقرير الأسبوع");
