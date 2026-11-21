@@ -560,14 +560,16 @@ const PODS={
 };
 const DEPT_ORDER=["تنفيذي","موارد بشرية","مالية وشؤون إدارية","تسويق","تصميم","برمجة","تحليل البيانات","إدارة الأزمات والمخاطر"];
 const DEPT_SLUG={"تنفيذي":"ops","موارد بشرية":"hr","مالية وشؤون إدارية":"fin","تسويق":"mkt","تصميم":"des","برمجة":"dev","تحليل البيانات":"data","إدارة الأزمات والمخاطر":"risk"};
-const MEET=(()=>{
+// مقعد الاجتماع يُحسب لحظياً من عدد الموظفين الحالي (لا مصفوفة ثابتة محسوبة مرة وحدة)،
+// عشان موظف يُوظَّف بعد فتح الصفحة ما ياخذ مقعد خارج الحدود (undefined) ويعلّق الحركة
+function seatFor(id){
   const zx=66,zy=5,zw=31,zh=42,cols=5;
-  const n=EMP.length,rows=Math.ceil(n/cols);
-  const cw=zw/cols,ch=zh/Math.max(rows,1);
-  const out=[];
-  for(let i=0;i<n;i++){const r=Math.floor(i/cols),c=i%cols;out.push([zx+cw*(c+.5),zy+ch*(r+.5)]);}
-  return out;
-})();
+  const index=EMP.findIndex(e=>e.id===id);if(index<0)return [zx,zy];
+  const rows=Math.max(1,Math.ceil(EMP.length/cols));
+  const cw=zw/cols,ch=zh/rows;
+  const r=Math.floor(index/cols),c=index%cols;
+  return [zx+cw*(c+.5),zy+ch*(r+.5)];
+}
 const LOUNGE=[[71,76],[75,88],[79,70],[89,82],[83,68],[93,70],[72,64],[86,90]];
 
 const floor=document.getElementById("floor");
@@ -1316,8 +1318,7 @@ function toast(m){const t=document.getElementById("toast");t.textContent=m;t.cla
 // meeting
 const meetBtn=document.getElementById("meetBtn"),backBtn=document.getElementById("backBtn"),meetCard=document.getElementById("meetCard");
 const INMEET=new Set();
-function seatFor(id){return MEET[EMP.findIndex(e=>e.id===id)]}
-function renderPeople(){document.getElementById("mPeople").innerHTML=EMP.map(e=>'<span class="sk pick'+(INMEET.has(e.id)?' on':'')+'" data-pp="'+e.id+'">'+e.name+'</span>').join("");
+function renderPeople(){document.getElementById("mPeople").innerHTML=EMP.map(e=>'<span class="sk pick'+(INMEET.has(e.id)?' on':'')+'" data-pp="'+esc(e.id)+'">'+esc(e.name)+'</span>').join("");
   document.querySelectorAll("[data-pp]").forEach(c=>c.onclick=()=>toggleMeet(c.dataset.pp))}
 function openMeeting(){
   if(!state.meeting){floor.classList.add("meeting");state.meeting=true;meetBtn.style.display="none";backBtn.style.display="";meetCard.style.display="";showView("office");}
@@ -1739,7 +1740,7 @@ function hireTool(){
       EXTRA_HIRES.push({emp:newEmp,deep:DEEP[id]});saveHires();
       rebuildFloor();
       toast("🎉 انضم موظف جديد فعلياً: "+name+" — "+role+" (قسم "+dept+")");
-      return "تم التوظيف فعلياً داخل المكتب الافتراضي: "+name+"، "+role+"، قسم "+dept+"، يشتغل على "+TOOLS[tool].name+". له مكتب على الطابق الحين وتقدر تكلّمه مباشرة.";
+      return "تم التوظيف فعلياً داخل المكتب الافتراضي: "+name+"، "+role+"، قسم "+dept+"، يشتغل على "+TOOLS[tool].name+". رقم الموظف: "+id+". له مكتب على الطابق الحين وتقدر تكلّمه مباشرة باسمه "+name+".";
     }
   };
 }
