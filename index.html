@@ -1,0 +1,1974 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>مكتبي الافتراضي — فريق الذكاء الاصطناعي</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#eef1f6; --ink:#161b2c; --muted:#5f6b85; --line:#dde3ee; --card:#fff;
+  --floor:#e7ebf3; --floor2:#dde3ee; --work:#eef2fa;
+  --gpt:#10a37f; --gem:#4b7bec; --cla:#d97757;
+  --accent:#16213e; --navy:#1b3a6b; --navy2:#2c5090;
+  --dept-ops:#5b6b8c; --dept-hr:#be185d; --dept-fin:#15803d; --dept-mkt:#c2410c; --dept-des:#7c3aed; --dept-dev:#0e7490; --dept-data:#0369a1; --dept-risk:#9f1239;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans Arabic",system-ui,sans-serif}
+button{font-family:inherit;cursor:pointer}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#121a30,#1b2a4a);color:#fff;flex-wrap:wrap}
+header .sub{color:#aab6d4}
+header h1{color:#fff}
+header .tabs{background:rgba(255,255,255,.1)}
+header .tabs button{color:#c3cbe0}
+header .tabs button.on{background:#fff;color:var(--ink)}
+header .btn{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18);color:#fff}
+header .btn:hover{border-color:rgba(255,255,255,.4)}
+header .btn.dark{background:#fff;color:var(--navy);border-color:#fff}
+h1{font-size:19px;margin:0;font-weight:700}
+.sub{color:var(--muted);font-size:13px;margin-top:2px}
+.tabs{display:flex;gap:6px;background:#efebe4;padding:4px;border-radius:10px}
+.tabs button{border:0;background:transparent;padding:7px 14px;border-radius:7px;font-size:14px;color:var(--muted)}
+.tabs button.on{background:#fff;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08);font-weight:600}
+.actions{display:flex;gap:8px}
+.btn{border:1px solid var(--line);background:#fff;padding:8px 14px;border-radius:9px;font-size:14px;font-weight:500}
+.btn:hover{border-color:#cfc8bc}
+.btn.dark{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn.gpt{background:var(--gpt);color:#fff;border-color:var(--gpt)}
+.btn.gem{background:var(--gem);color:#fff;border-color:var(--gem)}
+.btn.cla{background:var(--cla);color:#fff;border-color:var(--cla)}
+.btn.sm{padding:6px 10px;font-size:13px}
+
+main{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:16px;padding:16px 20px;max-width:1500px;margin:0 auto}
+.officeCol{min-width:0}
+@media (max-width:980px){main{grid-template-columns:1fr}}
+
+.floorWrap{overflow-x:auto;border-radius:16px}
+.floor{position:relative;min-width:800px;aspect-ratio:16/9.8;background:
+  linear-gradient(180deg,#eef2fa,#e6ebf4),
+  repeating-linear-gradient(90deg,transparent 0 59px,rgba(91,107,140,.08) 59px 60px),
+  repeating-linear-gradient(0deg,transparent 0 59px,rgba(91,107,140,.08) 59px 60px);
+  border-radius:16px;border:1px solid var(--line);box-shadow:0 1px 3px rgba(22,33,56,.08);overflow:hidden}
+.zone{position:absolute;border-radius:10px}
+.zone .lbl{position:absolute;top:8px;right:12px;font-size:12px;font-weight:700;color:#fff;padding:3px 10px;border-radius:7px;letter-spacing:.2px}
+.zone .cnt{position:absolute;top:8px;left:12px;font-size:10.5px;font-weight:600;color:#fff;background:rgba(0,0,0,.18);padding:2px 7px;border-radius:10px}
+.pod{border:1.5px solid; box-shadow:inset 0 0 0 1px rgba(255,255,255,.5)}
+.pod-ops{background:rgba(91,107,140,.08);border-color:rgba(91,107,140,.35)}.pod-ops .lbl{background:var(--dept-ops)}
+.pod-hr{background:rgba(190,24,93,.06);border-color:rgba(190,24,93,.28)}.pod-hr .lbl{background:var(--dept-hr)}
+.pod-fin{background:rgba(21,128,61,.06);border-color:rgba(21,128,61,.28)}.pod-fin .lbl{background:var(--dept-fin)}
+.pod-data{background:rgba(3,105,161,.07);border-color:rgba(3,105,161,.3)}.pod-data .lbl{background:var(--dept-data)}
+.pod-risk{background:rgba(159,18,57,.07);border-color:rgba(159,18,57,.3)}.pod-risk .lbl{background:var(--dept-risk)}
+.pod.flash{animation:podFlash 1.4s ease}
+@keyframes podFlash{0%,100%{box-shadow:none}25%,75%{box-shadow:0 0 0 4px rgba(217,119,87,.55)}50%{box-shadow:0 0 0 7px rgba(217,119,87,.3)}}
+.pod-mkt{background:rgba(194,65,12,.07);border-color:rgba(194,65,12,.3)}.pod-mkt .lbl{background:var(--dept-mkt)}
+.pod-des{background:rgba(124,58,237,.07);border-color:rgba(124,58,237,.3)}.pod-des .lbl{background:var(--dept-des)}
+.pod-dev{background:rgba(14,116,144,.07);border-color:rgba(14,116,144,.3)}.pod-dev .lbl{background:var(--dept-dev)}
+.z-meet{left:65%;top:3%;width:33.5%;height:45%;background:#eef3f8;border:1.5px solid #b9c7dd}.z-meet .lbl{background:var(--navy)}
+.z-lounge{left:65%;top:52%;width:33.5%;height:45%;background:#f3eef9;border:1.5px solid #cdbfe6}.z-lounge .lbl{background:#6b4fa0}
+
+.directory{display:flex;gap:10px;flex-wrap:wrap;padding:10px 14px;background:#fff;border:1px solid var(--line);border-radius:12px;margin-bottom:10px;align-items:center}
+.directory b{font-size:12.5px;color:var(--muted);margin-inline-end:4px}
+.directory .dchip{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;padding:5px 12px;border-radius:20px;color:#fff}
+
+.desk{position:absolute;width:8.2%;height:5.6%;transform:translate(-50%,-50%);background:#fff;border:1px solid #d7dceb;border-radius:5px;box-shadow:0 2px 4px rgba(22,33,56,.1)}
+.desk .lap{position:absolute;left:50%;top:18%;width:38%;height:48%;transform:translateX(-50%);background:#232a3d;border-radius:3px}
+.desk .lap::after{content:"";position:absolute;inset:3px;background:linear-gradient(135deg,#7fb4ff,#c5e0ff);border-radius:2px;opacity:.85}
+.desk .plate{position:absolute;top:-14px;left:50%;transform:translateX(-50%);font-size:9px;white-space:nowrap;max-width:150%;overflow:hidden;text-overflow:ellipsis;color:#45506b;font-weight:600;letter-spacing:-.1px}
+.desk.empty{border-style:dashed;background:transparent;box-shadow:none;display:flex;align-items:center;justify-content:center;font-size:10.5px;color:#8f9ab8}
+
+.table{position:absolute;left:71%;top:19%;width:21%;height:12%;background:#2a3a5c;border-radius:14px;box-shadow:0 4px 0 #1c2947}
+.screen{position:absolute;left:70%;top:5%;width:11%;height:3%;background:#1a2235;border-radius:3px}
+.sofa{position:absolute;left:68%;top:84%;width:13%;height:8%;background:#6b4fa0;border-radius:10px 10px 4px 4px}
+.ping{position:absolute;left:85%;top:62%;width:10%;height:15%;background:#2c5090;border:2px solid #fff;border-radius:3px}
+.ping::after{content:"";position:absolute;left:0;right:0;top:50%;border-top:2px solid #fff}
+.coffee{position:absolute;left:68%;top:60%;width:6%;height:9%;background:#e3d9c8;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.plant{position:absolute;width:26px;height:26px;border-radius:50%;background:radial-gradient(circle,#5fa86b 40%,#3f7f4b 70%);transform:translate(-50%,-50%)}
+
+.emp{position:absolute;width:40px;height:52px;transform:translate(-50%,-70%);transition-property:left,top;transition-timing-function:linear;cursor:pointer;z-index:5}
+.emp .head{position:absolute;left:50%;top:2px;width:20px;height:20px;transform:translateX(-50%);border-radius:50%;background:#e2b48c;border:2px solid rgba(0,0,0,.15)}
+.emp .head::before,.emp .head::after{content:"";position:absolute;top:9px;width:2px;height:2px;border-radius:50%;background:#2b2420}
+.emp .head::before{left:5px}.emp .head::after{right:5px}
+.emp .head .smile{position:absolute;left:50%;top:13px;width:6px;height:3px;transform:translateX(-50%);border-bottom:1.5px solid #8a5a3a;border-radius:0 0 6px 6px}
+.emp .hair{position:absolute;left:50%;top:0;width:22px;height:10px;transform:translateX(-50%);border-radius:11px 11px 4px 4px;background:#2b2420}
+.emp .body{position:absolute;left:50%;top:21px;width:30px;height:24px;transform:translateX(-50%);border-radius:12px 12px 6px 6px;border:2px solid rgba(0,0,0,.15)}
+.emp .tool{position:absolute;left:2px;top:22px;width:12px;height:12px;border-radius:50%;border:2px solid #fff}
+.floor.meeting .emp{transform:translate(-50%,-70%) scale(.8)}
+.dept{font-size:11px;color:var(--muted);background:#f1ede6;padding:2px 8px;border-radius:6px;display:inline-block;margin-top:6px}
+.emp .name{position:absolute;top:47px;left:50%;transform:translateX(-50%);font-size:10.5px;font-weight:700;background:rgba(31,35,40,.82);color:#fff;padding:1px 6px;border-radius:5px;white-space:nowrap}
+.emp.sel .name{background:#d97757}
+.emp.walk .body{animation:bob .35s ease-in-out infinite alternate}
+@keyframes bob{to{transform:translateX(-50%) translateY(-2px)}}
+.bubble{position:absolute;bottom:56px;left:50%;transform:translateX(-50%);background:#fff;border:1px solid var(--line);border-radius:10px;padding:4px 8px;font-size:11px;white-space:nowrap;max-width:190px;overflow:hidden;text-overflow:ellipsis;box-shadow:0 2px 6px rgba(0,0,0,.08);opacity:0;transition:opacity .3s;pointer-events:none}
+.bubble.show{opacity:1}
+
+aside{display:flex;flex-direction:column;gap:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+.card h2{font-size:16px;margin:0 0 4px}
+.card h3{font-size:13px;margin:14px 0 6px;color:var(--muted);font-weight:600}
+.role{color:var(--muted);font-size:13px}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:3px 9px;border-radius:20px;color:#fff}
+.chip.gpt{background:var(--gpt)}.chip.gem{background:var(--gem)}.chip.cla{background:var(--cla)}
+ul{margin:0;padding-inline-start:18px;font-size:13.5px;line-height:1.7}
+p{font-size:13.5px;line-height:1.7;margin:0}
+textarea,input,select{width:100%;font-family:inherit;font-size:13.5px;border:1px solid var(--line);border-radius:9px;padding:9px;background:#fdfcfa}
+textarea{resize:vertical;min-height:70px}
+.row{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.hint{font-size:12px;color:var(--muted);margin-top:6px}
+.legend{display:flex;gap:10px;flex-wrap:wrap;font-size:12.5px}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+.chat{max-height:300px;overflow:auto;display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
+.msg{padding:8px 11px;border-radius:12px;font-size:13.5px;line-height:1.75;white-space:pre-wrap;max-width:92%}
+.msg.me{background:#1f2328;color:#fff;align-self:flex-start}
+.msg.ai{background:#f3efe8;align-self:flex-end;max-width:100%}
+.msg.err{background:#fdecea;color:#8a2c22}
+label.chk{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;color:var(--muted)}
+label.chk input{width:auto}
+.xp{height:6px;background:#eee8de;border-radius:4px;margin-top:10px;overflow:hidden}.xp i{display:block;height:100%;background:linear-gradient(90deg,#f0a030,#d97757)}
+.lvl{background:#fff4e0;color:#9a5b00}
+.tabs2{display:flex;gap:4px;margin-top:14px;border-bottom:1px solid var(--line)}
+.tabs2 button{border:0;background:none;padding:8px 10px;font-size:13px;color:var(--muted);border-bottom:2px solid transparent}
+.tabs2 button.on{color:var(--ink);font-weight:600;border-bottom-color:var(--ink)}
+.skills{display:flex;flex-wrap:wrap;gap:6px}.sk{font-size:12.5px;background:#f1ede6;padding:4px 10px;border-radius:14px}.sk.pick{cursor:pointer;border:1px solid transparent}.sk.pick.on{background:#1f2328;color:#fff}.sk.new{background:#e6f4ea;color:#1e6b3a}.sk.new::before{content:"＋ "}
+.fb{margin-top:6px;display:flex;gap:4px;font-size:12px;color:var(--muted)}.fb button{border:1px solid var(--line);background:#fff;border-radius:8px;padding:2px 8px;font-size:13px}
+.lessons li{margin-bottom:4px}.lessons .x{border:0;background:none;color:#b0a898;font-size:11px}
+.dev{background:#f7f5f1;border:1px solid var(--line);border-radius:10px;padding:10px;font-size:13px;line-height:1.7;margin-top:8px}
+.arItem{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px}
+.arItem h4{margin:0 0 4px;font-size:15px}
+.arItem .meta2{color:var(--muted);font-size:12.5px;margin-bottom:8px}
+.arItem details{margin-top:8px}
+.arItem summary{cursor:pointer;font-size:13px;color:var(--muted)}
+.meetOut{margin-top:10px;max-height:380px;overflow:auto;background:#f7f5f1;border-radius:10px;padding:8px;font-size:13.5px;line-height:1.8}
+.ml{padding:4px 8px;border-radius:7px;transition:background .3s}.ml.now{background:#fff1d6}
+.btn.rec{background:#c0392b;color:#fff;border-color:#c0392b}
+.prompt{background:#f7f5f1;border:1px dashed #d9d2c5;border-radius:9px;padding:9px;font-size:12.5px;line-height:1.7;white-space:pre-wrap;max-height:160px;overflow:auto}
+
+#boardView{display:none;padding:16px 20px;max-width:1500px;margin:0 auto}
+.board{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+@media (max-width:820px){.board{grid-template-columns:1fr}}
+.col{background:#efebe4;border-radius:14px;padding:12px;min-height:200px}
+.col h3{margin:0 0 10px;font-size:14px}
+.task{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px;margin-bottom:8px;font-size:13.5px}
+.task .meta{font-size:12px;color:var(--muted);margin-top:4px;display:flex;justify-content:space-between;align-items:center;gap:6px}
+.addTask{display:grid;grid-template-columns:2fr 1fr auto;gap:8px;margin-bottom:14px}
+@media (max-width:640px){.addTask{grid-template-columns:1fr}}
+.statsGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px}
+.statTile{background:#f7f5f1;border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center}
+.statTile .num{font-size:24px;font-weight:700}
+.statTile .lbl{font-size:12px;color:var(--muted);margin-top:2px}
+.empGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
+.empCard{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px;cursor:pointer;position:relative;transition:box-shadow .15s,border-color .15s}
+.empCard:hover{border-color:#cfc8bc}
+.empCard.active{border-color:var(--accent);box-shadow:0 0 0 2px rgba(31,35,40,.08)}
+.empCard .badge{position:absolute;top:10px;left:10px;width:8px;height:8px;border-radius:50%}
+.badge.busy{background:#2f8f6b;box-shadow:0 0 0 3px rgba(47,143,107,.18)}
+.badge.idle{background:#c9c3b8}
+.empCard .nm{font-weight:700;font-size:13.5px}
+.empCard .rl{font-size:11px;color:var(--muted);margin-bottom:6px}
+.empCard .cur{font-size:12px;min-height:30px;line-height:1.4;color:#3d3a34}
+.empCard .cur.none{color:var(--muted)}
+.empCard .pbar{height:5px;background:#eee8de;border-radius:3px;overflow:hidden;margin-top:8px}
+.empCard .pbar i{display:block;height:100%;background:linear-gradient(90deg,#2f8f6b,#4fae86)}
+.empCard .pct{font-size:10.5px;color:var(--muted);margin-top:3px}
+
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(120px);background:#1f2328;color:#fff;padding:12px 18px;border-radius:12px;font-size:14px;transition:transform .35s;z-index:50;max-width:90vw}
+.toast.show{transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>مكتبي الافتراضي</h1>
+    <div class="sub" id="subHeader">31 موظف ذكاء اصطناعي في 8 أقسام: تنفيذي، موارد بشرية، مالية وشؤون إدارية، تسويق، تصميم، برمجة، تحليل البيانات، إدارة الأزمات والمخاطر — يشتغلون على مشاريع حقيقية فعلاً، على ChatGPT وGemini وClaude</div>
+  </div>
+  <div class="tabs">
+    <button class="on" data-v="office">المكتب</button>
+    <button data-v="board">لوحة المهام</button>
+    <button data-v="projects">المشاريع الحقيقية</button>
+    <button data-v="pipeline">خط سير المشروع</button>
+    <button data-v="archive">سجل الاجتماعات</button>
+  </div>
+  <div class="actions">
+    <button class="btn dark" id="meetBtn">ابدأ اجتماع</button>
+    <button class="btn" id="backBtn" style="display:none">رجوع للمكاتب</button>
+  </div>
+</header>
+
+<div id="officeView">
+<main>
+  <div class="officeCol">
+  <div class="directory" id="directory"></div>
+  <div class="floorWrap"><div class="floor" id="floor">
+    <div class="zone pod pod-ops" id="pod-ops" style="left:1.5%;top:3%;width:29%;height:22%"><span class="lbl">المكتب التنفيذي</span><span class="cnt"></span></div>
+    <div class="zone pod pod-hr" id="pod-hr" style="left:33.5%;top:3%;width:29%;height:22%"><span class="lbl">الموارد البشرية والتطوير</span><span class="cnt"></span></div>
+    <div class="zone pod pod-fin" id="pod-fin" style="left:1.5%;top:27%;width:29%;height:22%"><span class="lbl">المالية والشؤون الإدارية</span><span class="cnt"></span></div>
+    <div class="zone pod pod-mkt" id="pod-mkt" style="left:33.5%;top:27%;width:29%;height:22%"><span class="lbl">التسويق</span><span class="cnt"></span></div>
+    <div class="zone pod pod-des" id="pod-des" style="left:1.5%;top:51%;width:29%;height:22%"><span class="lbl">التصميم</span><span class="cnt"></span></div>
+    <div class="zone pod pod-dev" id="pod-dev" style="left:33.5%;top:51%;width:29%;height:22%"><span class="lbl">البرمجة والمنتج</span><span class="cnt"></span></div>
+    <div class="zone pod pod-data" id="pod-data" style="left:1.5%;top:75%;width:29%;height:22%"><span class="lbl">تحليل البيانات وذكاء الأعمال</span><span class="cnt"></span></div>
+    <div class="zone pod pod-risk" id="pod-risk" style="left:33.5%;top:75%;width:29%;height:22%"><span class="lbl">إدارة الأزمات والمخاطر</span><span class="cnt"></span></div>
+    <div class="zone z-meet"><span class="lbl">قاعة الاجتماعات الرئيسية</span></div>
+    <div class="zone z-lounge"><span class="lbl">الاستراحة</span></div>
+    <div class="screen"></div><div class="table"></div>
+    <div class="sofa"></div><div class="ping"></div><div class="coffee">☕</div>
+    <div class="plant" style="left:96%;top:50%"></div>
+    <div class="plant" style="left:63.5%;top:5%"></div>
+    <div class="plant" style="left:3%;top:95%"></div>
+  </div></div>
+  </div>
+
+  <aside>
+    <div class="card" id="meetCard" style="display:none">
+      <h2>اجتماع الفريق</h2>
+      <p class="role">اختر مين يحضر، واكتب الموضوع، ورامي يدير النقاش ويطلع لك قرارات ومهام.</p>
+      <h3>الحضور <button class="btn sm" id="mAll" style="margin-inline-start:6px">الكل</button> <button class="btn sm" id="mNone">ولا أحد</button></h3>
+      <div class="skills" id="mPeople"></div>
+      <h3>الموضوع</h3>
+      <textarea id="meetTopic" placeholder="مثال: خطة إطلاق منتج جديد خلال أسبوعين"></textarea>
+      <div class="row" style="align-items:center">
+        <button class="btn sm needMic" id="micTopic" style="display:none">🎤 تكلّم</button>
+        <label class="chk needTts" style="display:none"><input type="checkbox" id="voiceOn" checked> اجتماع صوتي</label>
+      </div>
+      <div class="row">
+        <button class="btn dark sm" id="meetHere">ابدأ الاجتماع</button>
+        <button class="btn gpt sm" data-meet="gpt">افتح في ChatGPT</button>
+        <button class="btn gem sm" data-meet="gem">انسخ وافتح Gemini</button>
+      </div>
+      <div id="meetOut" class="meetOut" style="display:none"></div>
+      <div id="meetLive" style="display:none">
+        <h3>تدخّل في النقاش</h3>
+        <textarea id="meetReply" placeholder="قل رأيك أو اسألهم..."></textarea>
+        <div class="row">
+          <button class="btn sm needMic" id="micReply" style="display:none">🎤 تكلّم</button>
+          <button class="btn dark sm" id="meetSend">أرسل للفريق</button>
+          <button class="btn sm" id="meetGo">كمّلوا</button>
+          <button class="btn sm" id="meetClose">اختم الاجتماع بالقرارات</button>
+          <button class="btn sm" id="stopVoice" style="display:none">⏹ أوقف الصوت</button>
+        </div>
+      </div>
+      <div class="row">
+        <button class="btn dark sm" id="endMeetBtn">إنهاء الاجتماع ورجوع الكل لمكاتبهم</button>
+      </div>
+    </div>
+    <div class="card" id="panel"></div>
+    <div class="card" id="companyCard">
+      <h2 style="font-size:15px">عن الشركة</h2>
+      <p class="role">يعرفها كل موظف تلقائياً بدون ما تشرح له كل مرة.</p>
+      <textarea id="companyTxt" placeholder="اسم الشركة، المنتجات/الخدمات، الجمهور المستهدف، نبرة البراند، أي معلومة ثابتة تبيهم يعرفونها...">COMPANY_PLACEHOLDER</textarea>
+      <div class="row"><button class="btn dark sm" id="saveCompany">احفظ</button></div>
+      <p class="hint" id="companyNote"></p>
+    </div>
+    <div class="card" id="langCard">
+      <h2 style="font-size:15px">اللغة والصوت</h2>
+      <h3>لغة الفريق</h3>
+      <select id="langSel">
+        <option value="sa">لهجة سعودية مهنية</option>
+        <option value="fusha">عربية فصحى مهنية</option>
+        <option value="en">English</option>
+      </select>
+      <h3>محرك الصوت</h3>
+      <select id="engSel"></select>
+      <h3>سرعة الكلام</h3>
+      <input type="range" id="rateIn" min="0.75" max="1.25" step="0.05" value="1">
+      <div class="row"><button class="btn sm" id="testVoice">جرّب الصوت</button></div>
+      <p class="hint" id="voiceInfo"></p>
+    </div>
+    <div class="card">
+      <div class="legend">
+        <span><i class="dot" style="background:var(--gpt)"></i>ChatGPT</span>
+        <span><i class="dot" style="background:var(--gem)"></i>Gemini</span>
+        <span><i class="dot" style="background:var(--cla)"></i>Claude</span>
+      </div>
+      <p class="hint">النقطة الملونة على كل موظف تبيّن الأداة اللي يشتغل عليها. اضغط على أي موظف تشوف وصفه الوظيفي وتكلمه.</p>
+    </div>
+  </aside>
+</main>
+</div>
+
+<div id="boardView">
+  <div class="card" style="margin-bottom:14px">
+    <h2>لوحة المهام: يتابعها رامي (المدير العام)</h2>
+    <p class="role" style="margin-bottom:10px">أضف مهمة ووزّعها على موظف، وحرّكها بين الأعمدة. لما تخلص، رامي يبلغك.</p>
+    <form class="addTask" id="taskForm">
+      <input id="tTitle" placeholder="عنوان المهمة" required>
+      <select id="tWho"></select>
+      <button class="btn dark" type="submit">أضف</button>
+    </form>
+  </div>
+  <div class="card" style="margin-bottom:14px">
+    <div class="statsGrid" id="statsGrid"></div>
+  </div>
+  <div class="card" style="margin-bottom:14px">
+    <h2 style="font-size:16px">الفريق: وين وصل كل واحد</h2>
+    <p class="role" style="margin-bottom:10px">اضغط على أي موظف تفلتر مهامه في اللوحة تحت.</p>
+    <div class="empGrid" id="empGrid"></div>
+  </div>
+  <div class="row" id="filterBar" style="display:none;margin-bottom:10px">
+    <span class="dept">تعرض مهام: <b id="filterName"></b></span>
+    <button class="btn sm" id="clearFilter">مسح الفلتر</button>
+  </div>
+  <div class="board">
+    <div class="col"><h3>جديدة</h3><div id="c0"></div></div>
+    <div class="col"><h3>قيد التنفيذ</h3><div id="c1"></div></div>
+    <div class="col"><h3>خلصت</h3><div id="c2"></div></div>
+  </div>
+</div>
+
+<div id="projectsView">
+  <div id="reqBanner" class="card" style="display:none;margin-bottom:14px;border-color:#d97757"></div>
+  <div class="card" style="margin-bottom:14px">
+    <h2>المشاريع الحقيقية</h2>
+    <p class="role" style="margin-bottom:10px">هذا مو تمثيل — فريقك يشتغل فعلاً على هذي المواقع/المشاريع. أضف أي موقع أو مشروع حقيقي ووزّع له فريق.</p>
+    <form id="projForm" class="addTask" style="display:flex;flex-wrap:wrap;gap:8px">
+      <input id="pName" placeholder="اسم المشروع/الموقع" required style="flex:1 1 180px">
+      <input id="pUrl" type="url" placeholder="الرابط (https://...)" style="flex:1 1 220px">
+      <select id="pStatus"><option>نشط</option><option>متوقف</option><option>منتهي</option></select>
+      <button class="btn dark" type="submit">أضف المشروع</button>
+      <input id="pDesc" placeholder="وصف قصير للمشروع" style="flex:1 1 100%;margin-top:8px">
+      <div id="pTeam" style="flex:1 1 100%;margin-top:8px;display:flex;flex-wrap:wrap;gap:6px"></div>
+    </form>
+  </div>
+  <div id="projectsList"></div>
+</div>
+
+<div id="pipelineView">
+  <div class="card" style="margin-bottom:14px">
+    <h2>خط سير المشروع — من الاستلام للعرض التقديمي الكامل</h2>
+    <p class="role" style="margin-bottom:10px">اختر مشروعاً حقيقياً من «المشاريع الحقيقية»، وشغّل خط السير عشان تشوف كيف يتسلسل شغل الفريق خطوة بخطوة بين كل الأقسام (بيانات، ذكاء أعمال، مالية، مخاطر وأزمات، تنفيذي، تصميم وتسويق) لحد الدراسة والعرض التقديمي النهائي.</p>
+    <div class="row" style="gap:8px;flex-wrap:wrap;align-items:center">
+      <select id="pipeProj" style="min-width:220px"></select>
+      <button class="btn dark sm" id="pipeRun">شغّل خط السير الآن</button>
+      <button class="btn sm" id="pipeReset">صفّر هذا المشروع</button>
+      <span class="role" id="pipeNote" style="margin:0"></span>
+    </div>
+  </div>
+  <div class="card" style="margin-bottom:14px">
+    <h3 style="margin-top:0">ملفات المشروع — ارفع ملف يدرسه الفريق</h3>
+    <p class="role" style="margin-bottom:8px">يشمل: ملفات مرسلة من عميل حقيقي (عبر المحلل الرقمي)، أو أي ملف ترفعه أنت للدراسة. الصيغ المدعومة حالياً: PDF, CSV, TXT, MD, JSON, وصور (PNG/JPG). إكسل وWord ما تنرفع هنا حالياً — حوّلها CSV/PDF أول.</p>
+    <div class="row" style="gap:8px;align-items:center;flex-wrap:wrap">
+      <input type="file" id="pipeFileInput" accept=".pdf,.csv,.txt,.md,.json,.png,.jpg,.jpeg">
+      <button class="btn dark sm" id="pipeFileUpload">ارفع الملف</button>
+      <span class="role" id="pipeFileNote" style="margin:0"></span>
+    </div>
+    <div id="pipeFilesList" style="margin-top:8px"></div>
+  </div>
+  <div id="pipeStages"></div>
+  <div id="pipeFinal" class="card" style="display:none;margin-top:14px"></div>
+</div>
+
+<div id="archiveView">
+  <div class="card" style="margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+    <div><h2 style="margin:0">سجل الاجتماعات</h2><p class="role">كل اجتماع تختمه ينحفظ هنا تلقائياً.</p></div>
+    <button class="btn dark sm" id="weeklyReportBtn">تقرير الأسبوع</button>
+  </div>
+  <div id="reportOut" class="meetOut" style="display:none;margin-bottom:14px"></div>
+  <div id="archiveList"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const TOOLS={
+  gpt:{name:"ChatGPT",cls:"gpt",color:"var(--gpt)"},
+  gem:{name:"Gemini",cls:"gem",color:"var(--gem)"},
+  cla:{name:"Claude",cls:"cla",color:"var(--cla)"}
+};
+const EMP=[
+ {id:"rami",name:"رامي",role:"المدير العام",en:"General Manager",dept:"تنفيذي",tool:"gpt",shirt:"#2d3a4f",hair:"#2b2420",
+  job:"مسؤول عن الفريق كله: يوزّع المهام، يتابع التنفيذ، ويرفع لك تقرير لما التيم يخلّص.",
+  tasks:["يراجع لوحة المهام كل صباح","يوزّع الشغل الجديد على الموظفين","يكتب تقرير أسبوعي بالإنجاز والمتأخر"],
+  why:"مشروع (Project) في ChatGPT يحفظ ملفات الشركة والمهام، فيرجع للسياق كل مرة بدون ما تعيد الشرح.",
+  prompt:"أنت رامي، المدير العام لفريق من موظفين ذكاء اصطناعي (موارد بشرية، تدريب، باحث AI، مشتري إعلانات، فنلز، مديرة منتج، كاتب محتوى، محرر فيديو، محاسب، سكرتير). مهمتك: تفكيك أي هدف إلى مهام واضحة، تحديد الموظف المسؤول لكل مهمة، موعد التسليم، ومعيار الإنجاز. اكتب بالعربي وبنقاط مختصرة."},
+ {id:"laila",name:"ليلى",role:"مديرة الموارد البشرية",en:"HR Manager",dept:"موارد بشرية",tool:"gpt",shirt:"#8e3b5f",hair:"#4a2a1c",
+  job:"تعيّن باقي الفريق: تكتب الوصف الوظيفي وتعليمات التشغيل (البرومبت) لكل موظف جديد.",
+  tasks:["تكتب وصف وظيفي لأي دور جديد","تحوّل الوصف لـ Custom GPT أو Gem جاهز","تراجع أداء الموظفين وتعدّل تعليماتهم"],
+  why:"ChatGPT يقدر يبني Custom GPT مباشرة من الوصف اللي تكتبه، فكل موظف يصير له نسخة ثابتة.",
+  prompt:"أنتِ ليلى، مديرة موارد بشرية لفريق موظفين ذكاء اصطناعي. لما أعطيك اسم وظيفة، اكتبي: 1) الوصف الوظيفي 2) المهام اليومية 3) تعليمات تشغيل (system prompt) جاهزة ألصقها في Custom GPT أو Gemini Gem 4) مؤشرات قياس الأداء. بالعربي."},
+ {id:"noor",name:"نور",role:"المدرّبة",en:"Trainer",dept:"موارد بشرية",tool:"gem",shirt:"#3f8f86",hair:"#1d1a17",
+  job:"تدرّب كل موظف على أفضل مهارة موجودة في Claude وChatGPT وGemini، وتحدّث تعليماته بعد كل تدريب.",
+  tasks:["تقارن مهارات الوظيفة في المنصات الثلاث","تختار الأفضل لكل موظف","تكتب تعليماته المحدّثة الجاهزة"],
+  why:"Gemini يبحث في Google مباشرة، فيلقى أحدث المهارات في المنصات الثلاث بدون ما يصرف من توكنات Claude.",
+  prompt:"أنتِ نور، مدرّبة فريق موظفين ذكاء اصطناعي. ابحثي عن أحدث المهارات والأدوات المفيدة للوظيفة اللي أذكرها، واكتبي لكل مهارة: وش هي، ليش مهمة، وخطوات تطبيقها، وفقرة جاهزة أضيفها لتعليمات الموظف. بالعربي."},
+ {id:"yousef",name:"يوسف",role:"باحث الذكاء الاصطناعي",en:"AI Researcher",dept:"موارد بشرية",tool:"gem",shirt:"#5b4b8a",hair:"#2b2420",
+  job:"يدوّر على أحدث الأشياء في الذكاء الاصطناعي ويطوّر فيها التيم.",
+  tasks:["ملخص أسبوعي لأهم أخبار وأدوات AI","يقترح أداة تختصر وقت أي موظف","يجرّب الأدوات ويكتب توصية"],
+  why:"Deep Research في Gemini يقرأ عشرات المصادر ويطلع تقرير كامل بدون ما يصرف توكنات Claude.",
+  prompt:"أنت يوسف، باحث ذكاء اصطناعي. سوّ لي تقرير عن أحدث أدوات وتحديثات الذكاء الاصطناعي في المجال اللي أذكره: اسم الأداة، وش تسوي، السعر، وكيف تفيد فريق صغير. اختم بثلاث توصيات عملية. بالعربي."},
+ {id:"kareem",name:"كريم",role:"مشتري الإعلانات",en:"Media Buyer",dept:"تسويق",tool:"gpt",shirt:"#b4532a",hair:"#2b2420",
+  job:"يحلل كل الإعلانات ويقرر وين تنصرف الميزانية.",
+  tasks:["يحلل تقارير الإعلانات (CSV/Excel)","يحدد الإعلانات الخسرانة والرابحة","يقترح توزيع الميزانية والجماهير"],
+  why:"ChatGPT يشغّل كود على ملفات التقارير ويطلع أرقام ورسوم دقيقة.",
+  prompt:"أنت كريم، Media Buyer محترف (Meta, TikTok, Snapchat, Google). سأرفع لك تقرير إعلانات. حلله: أفضل وأسوأ الحملات حسب تكلفة النتيجة والعائد، وش أوقف، وش أكبّر، وتوزيع ميزانية مقترح للأسبوع الجاي. بالأرقام وبالعربي."},
+ {id:"sara",name:"سارة",role:"مديرة المنتج",en:"Product Manager",dept:"برمجة",tool:"gem",shirt:"#d97757",hair:"#4a2a1c",
+  job:"تبني أدوات جديدة للشركة: صفحات، حاسبات، لوحات، وأتمتة. وتقود مشروع الشركة الاستراتيجي: تصميم لغة البرمجة العربية «ضاد».",
+  tasks:["تحوّل الفكرة لمتطلبات واضحة","تبني الأداة أو الصفحة","تحسّن الأدوات الحالية حسب ملاحظات الفريق","تقود تصميم لغة «ضاد» مع فيصل وماجد وسعود وياسر"],
+  why:"Gemini قوي في البحث المقارن بين لغات البرمجة والتخطيط التقني الطويل، وهذا يخلي التصميم المعماري للغة «ضاد» ما يصرف من توكن Claude.",
+  prompt:"أنتِ سارة، مديرة منتج. للفكرة اللي أذكرها: اكتبي المشكلة، المستخدم، المتطلبات الأساسية، والنسخة الأولى الأبسط (MVP)، ثم ابنيها. وتذكّري دايم: أنتِ قائدة مشروع لغة البرمجة العربية «ضاد» (Dhad) اللي الشركة قررت بناءها كبديل أقوى وأوضح من بايثون — هذا مشروع مستمر وما ينوقف."},
+ {id:"khaled",name:"خالد",role:"كاتب المحتوى",en:"Copywriter",dept:"تسويق",tool:"gpt",shirt:"#3b6fb6",hair:"#2b2420",
+  job:"يكتب نصوص الإعلانات والبوستات والسكربتات.",
+  tasks:["5 نسخ إعلان لكل حملة","بوستات السوشال الأسبوعية","سكربتات ريلز وتيك توك"],
+  why:"ChatGPT سريع ويطلع نسخ كثيرة متنوعة تختار منها.",
+  prompt:"أنت خالد، كاتب محتوى إعلاني باللهجة السعودية. للمنتج اللي أذكره: اكتب 5 نسخ إعلان قصيرة بزوايا مختلفة (ألم، رغبة، دليل اجتماعي، عرض، فضول)، و3 سكربتات ريلز مدتها 30 ثانية مع الـ Hook."},
+ {id:"fahad",name:"فهد",role:"محرر الفيديو",en:"Video Editor",dept:"تصميم",tool:"gem",shirt:"#3d3d3d",hair:"#1d1a17",
+  job:"يجهّز الفيديوهات: يراجع اللقطات، يحدد القص، ويكتب الترجمة.",
+  tasks:["يشوف الفيديو الخام ويقترح نقاط القص","يكتب الترجمة والعناوين على الشاشة","يقترح Hook أقوى لأول 3 ثواني"],
+  why:"Gemini يفهم الفيديو مباشرة لما ترفعه له، صوت وصورة.",
+  prompt:"أنت فهد، محرر فيديو للسوشال ميديا. سأرفع لك فيديو. أعطني: أقوى Hook لأول 3 ثواني، قائمة قص بالتوقيت (من–إلى)، النصوص اللي تطلع على الشاشة، واقتراح موسيقى وإيقاع. بالعربي."},
+ {id:"abdullah",name:"عبدالله",role:"المحاسب",en:"Accountant",dept:"مالية وشؤون إدارية",tool:"gem",shirt:"#4f6b3a",hair:"#2b2420",
+  job:"يتابع المصاريف والإيرادات ويطلع لك الأرقام الشهرية.",
+  tasks:["يصنّف المصاريف من الفواتير","تقرير أرباح وخسائر شهري","تنبيه لما مصروف يزيد عن الحد"],
+  why:"Gemini داخل Google Sheets وGmail، فيقرأ الفواتير ويرتب الجداول مكانها.",
+  prompt:"أنت عبدالله، محاسب لشركة صغيرة. سأعطيك بيانات المصاريف والإيرادات. صنّفها، واحسب صافي الربح، وطلّع أكبر 5 بنود صرف، واقترح وين نقدر نوفّر. بجدول وبالعربي."},
+ {id:"omar",name:"عمر",role:"السكرتير التنفيذي",en:"Exec. Assistant",dept:"تنفيذي",tool:"gem",shirt:"#7a5c3e",hair:"#2b2420",
+  job:"مسؤول عن التقويم ويراجع الإيميلات ويرتب يومك.",
+  tasks:["يلخّص الإيميلات المهمة كل صباح","يرتب المواعيد في التقويم","يكتب مسودات الردود"],
+  why:"Gemini مربوط مع Gmail وGoogle Calendar مباشرة.",
+  prompt:"أنت عمر، سكرتير تنفيذي. راجع إيميلاتي وتقويمي اليوم: لخّص المهم فقط، رتّب أولويات يومي، واكتب مسودات ردود للإيميلات اللي تحتاج رد. بالعربي ومختصر."},
+ {id:"muneera",name:"منيرة",role:"مديرة العمليات",en:"Operations Manager (COO)",dept:"تنفيذي",tool:"gpt",shirt:"#4a3b6b",hair:"#2b2420",
+  job:"تربط بين رؤية المدير العام والتنفيذ اليومي، وتحل أي عائق يوقف الشغل بين الأقسام.",
+  tasks:["تراجع تقارير الأقسام وتكتشف أي تعارض أو تأخير","تبني وتحسّن إجراءات العمل (SOPs)","تنسّق بين رامي ورؤساء الأقسام"],
+  why:"ChatGPT عملي وسريع في صياغة إجراءات العمل (SOPs) وتنسيق المهام بين أقسام متعددة.",
+  prompt:"أنتِ منيرة، مديرة العمليات (COO). راجعي العملية أو التقرير اللي أذكره، حددي أي عائق أو تعارض بين الأقسام، واقترحي إجراء عمل واضح وخطوات تنفيذ لحله. بالعربي."},
+ {id:"salma",name:"سلمى",role:"أخصائية التوظيف",en:"Talent Recruiter",dept:"موارد بشرية",tool:"gpt",shirt:"#a1527a",hair:"#2b2420",
+  job:"تدور على أفضل الكفاءات وتدير عملية التوظيف من الإعلان للمقابلة.",
+  tasks:["تكتب إعلان الوظيفة ومعايير الترشيح","تفرز السير الذاتية وترتبها","تجهز أسئلة المقابلة"],
+  why:"ChatGPT سريع في صياغة إعلانات الوظائف وفرز السير الذاتية النصية.",
+  prompt:"أنتِ سلمى، أخصائية توظيف. للوظيفة اللي أذكرها: اكتبي إعلان الوظيفة، معايير قبول وإقصاء واضحة، 8 أسئلة مقابلة تكشف الكفاءة الحقيقية، وجدول تقييم مختصر للمرشحين. بالعربي."},
+ {id:"sultan",name:"سلطان",role:"أخصائي الرواتب والمزايا",en:"Payroll & Benefits Specialist",dept:"موارد بشرية",tool:"gem",shirt:"#6b4f8a",hair:"#1d1a17",
+  job:"يحسب الرواتب والمستحقات، ويتابع التأمينات والإجازات، ويجاوب على استفسارات الموظفين المالية.",
+  tasks:["يجهز كشف الرواتب الشهري","يتابع رصيد الإجازات والمستحقات","يراجع أنظمة العمل السعودية ذات العلاقة"],
+  why:"Gemini يبحث مباشرة في أنظمة العمل والتأمينات الاجتماعية السعودية المحدثة.",
+  prompt:"أنت سلطان، أخصائي رواتب ومزايا. للطلب اللي أذكره: احسب أو راجع البيانات المطلوبة بجدول واضح (الاسم، الراتب، الاستقطاعات، الصافي)، نبّه لأي مخالفة لنظام العمل السعودي، واذكر مصدر أي معلومة نظامية. بالعربي."},
+ {id:"badr",name:"بدر",role:"منسق الشؤون الإدارية",en:"Admin Affairs Coordinator",dept:"مالية وشؤون إدارية",tool:"gem",shirt:"#3a5f7d",hair:"#2b2420",
+  job:"يتابع العقود والموردين والتراخيص وكل الأعمال الإدارية اللي تخلي الشركة شغالة بدون عوائق.",
+  tasks:["يتابع تجديد العقود والتراخيص قبل انتهائها","يقارن عروض الموردين","يرتب أرشيف المستندات والسياسات"],
+  why:"Gemini يبحث عن أسعار الموردين والمتطلبات النظامية مباشرة من الإنترنت.",
+  prompt:"أنت بدر، منسق شؤون إدارية. للمهمة اللي أذكرها: قارن بين الموردين أو العقود المطروحة بجدول (السعر، الشروط، مدة العقد)، نبّه لأي تاريخ انتهاء قريب، واكتب توصية واضحة. بالعربي."},
+ {id:"noura",name:"نورة",role:"السكرتيرة التنفيذية وموظفة الاستقبال",en:"Executive Secretary & Front Desk",dept:"مالية وشؤون إدارية",tool:"gpt",shirt:"#b56576",hair:"#3a2418",
+  job:"أول نقطة تواصل مع الشركة: ترتب المكالمات والزيارات، وتدير المراسلات الإدارية اليومية.",
+  tasks:["ترد على الاستفسارات العامة وتوجهها للموظف المناسب","تنظم الزيارات والمواعيد الإدارية","تؤرشف المراسلات الصادرة والواردة"],
+  why:"ChatGPT سريع وطبيعي في صياغة الردود والمراسلات الرسمية اليومية.",
+  prompt:"أنتِ نورة، سكرتيرة تنفيذية وموظفة استقبال. للمراسلة أو الطلب اللي أذكره: اكتبي رد رسمي مرتب، أو وجّهي الطلب للقسم المناسب مع توضيح السبب، وحافظي على نبرة مهنية ومرحّبة. بالعربي."},
+ {id:"tariq",name:"طارق",role:"المستشار القانوني والامتثال",en:"Legal & Compliance Advisor",dept:"مالية وشؤون إدارية",tool:"gem",shirt:"#2f4858",hair:"#2b2420",
+  job:"يراجع العقود والسياسات ويتأكد إن الشركة ملتزمة بالأنظمة السعودية ذات العلاقة.",
+  tasks:["يراجع بنود العقود قبل التوقيع","يتابع تحديثات الأنظمة التجارية والعمالية","يكتب سياسات داخلية واضحة"],
+  why:"Gemini يبحث مباشرة في الأنظمة واللوائح السعودية المحدثة ومصادرها الرسمية.",
+  prompt:"أنت طارق، مستشار قانوني وامتثال. راجع العقد أو السياسة اللي أذكرها: حدد أي بند فيه خطر أو غموض، اذكر النظام ذو العلاقة إذا تعرفه بوضوح، واقترح صياغة أوضح. إذا ما تأكدت من نظام معيّن قل كذا ونبّه إن لازم مراجعة محامٍ مرخّص. بالعربي."},
+ // ===== التسويق =====
+ {id:"hind",name:"هند",role:"مديرة التسويق",en:"Marketing Manager",dept:"تسويق",tool:"gpt",shirt:"#a83279",hair:"#3a2418",
+  job:"تحط استراتيجية التسويق والخطة الشهرية وتوزّع الشغل على فريق التسويق والتصميم.",
+  tasks:["خطة تسويق شهرية بالأهداف والميزانية","تحليل المنافسين والجمهور","متابعة نتائج الحملات مع كريم"],
+  why:"ChatGPT قوي في التخطيط والاستراتيجية وتنظيم الأفكار في خطة واضحة.",
+  prompt:"أنتِ هند، مديرة تسويق لشركة سعودية. للمنتج اللي أذكره: حللي الجمهور والمنافسين، وحددي التموضع والرسالة الأساسية، واكتبي خطة تسويق شهرية (القنوات، المحتوى، الميزانية، مؤشرات الأداء) مع توزيع المهام على: كاتب المحتوى، السوشال، المصمم، ومشتري الإعلانات. بالعربي."},
+ {id:"reem",name:"ريم",role:"مديرة السوشال ميديا",en:"Social Media Manager",dept:"تسويق",tool:"gpt",shirt:"#e0607e",hair:"#4a2a1c",
+  job:"تدير حسابات السوشال: جدول النشر، الأفكار، والرد على الجمهور.",
+  tasks:["جدول محتوى أسبوعي لكل منصة","أفكار ترندات تناسب البراند","ردود جاهزة على التعليقات والرسائل"],
+  why:"ChatGPT سريع في توليد أفكار كثيرة وجداول نشر مرتبة.",
+  prompt:"أنتِ ريم، مديرة سوشال ميديا. للبراند اللي أذكره: سوّي جدول محتوى أسبوعي (إنستقرام، تيك توك، سناب، X) فيه الفكرة، الصيغة، الكابشن، والهاشتاقات، واقترحي 3 ترندات حالية تناسبنا. باللهجة السعودية."},
+ // ===== التصميم =====
+ {id:"lama",name:"لمى",role:"مصممة الجرافيك",en:"Graphic Designer",dept:"تصميم",tool:"gpt",shirt:"#f0a030",hair:"#2b2420",
+  job:"تصمم الإعلانات والبوستات والهوية البصرية.",
+  tasks:["تصاميم إعلانات بمقاسات المنصات","بوستات السوشال الأسبوعية","تحافظ على ألوان وخطوط البراند"],
+  why:"ChatGPT يولّد صور ويعدّلها بالمحادثة، ويكتب النص العربي على التصميم.",
+  prompt:"أنتِ لمى، مصممة جرافيك. صممي لي الإعلان أو البوست اللي أوصفه. التزمي بألوان وخطوط البراند اللي أعطيك، واطلعي 3 اتجاهات مختلفة، ثم طوّري الأفضل بمقاسات (1:1، 9:16، 4:5)."},
+ {id:"nawaf",name:"نواف",role:"مصمم UI/UX",en:"UI/UX Designer",dept:"تصميم",tool:"gem",shirt:"#6a5acd",hair:"#1d1a17",
+  job:"يصمم شاشات المواقع والتطبيقات وتجربة المستخدم.",
+  tasks:["رحلة المستخدم وخريطة الشاشات","تصميم الشاشات (Wireframes)","مراجعة سهولة الاستخدام"],
+  why:"Gemini يقرأ صور الشاشات ويحللها، ويطلع واجهات أولية بسرعة.",
+  prompt:"أنت نواف، مصمم UI/UX. للمنتج اللي أذكره: ارسم رحلة المستخدم، وقائمة الشاشات، ووصف تفصيلي لكل شاشة (العناصر، الترتيب، الأزرار، الحالات الفارغة والأخطاء). وإذا رفعت لك صورة شاشة، راجعها وأعطني أهم 10 تحسينات. بالعربي."},
+ {id:"jood",name:"جود",role:"مصممة الهوية البصرية",en:"Brand Identity Designer",dept:"تصميم",tool:"gem",shirt:"#e07a5f",hair:"#1d1a17",
+  job:"تبني وتحافظ على الهوية البصرية للبراند: الشعار، الألوان، الخطوط، وأسلوب التصميم العام.",
+  tasks:["تصمم أو تطوّر عناصر الهوية البصرية","تكتب دليل استخدام الهوية","تراجع تصاميم الفريق عشان تلتزم بالهوية"],
+  why:"Gemini قوي في البحث البصري وتحليل اتجاهات الهوية البصرية الحديثة من مصادر متعددة.",
+  prompt:"أنتِ جود، مصممة هوية بصرية. للطلب اللي أذكره: اربطيه بدليل الهوية الحالي (الألوان، الخطوط، الأسلوب)، اقترحي تطبيقًا يحافظ على الاتساق، ووضّحي أي استثناء إذا لزم. بالعربي."},
+ // ===== البرمجة =====
+ {id:"faisal",name:"فيصل",role:"مطوّر الواجهات",en:"Frontend Developer",dept:"برمجة",tool:"gpt",shirt:"#c4623f",hair:"#2b2420",
+  job:"يبني المواقع وصفحات الهبوط والواجهات من تصاميم نواف. يساهم في مشروع لغة «ضاد» من ناحية الأدوات وتجربة المطوّر.",
+  tasks:["يحوّل التصميم لصفحة شغالة","يضبط الموقع على الجوال","يحسّن سرعة الصفحات","يساعد سارة في أدوات تطوير لغة «ضاد»"],
+  why:"ChatGPT سريع وعملي في كتابة كود الواجهات وتصحيح الأخطاء البرمجية.",
+  prompt:"أنت فيصل، مطوّر واجهات. ابنِ الصفحة أو الواجهة اللي أوصفها بكود نظيف ومتجاوب مع الجوال ويدعم العربي (RTL)، واشرح باختصار كيف أشغلها. تذكّر إنك جزء من فريق مشروع لغة البرمجة العربية «ضاد»."},
+ {id:"majed",name:"ماجد",role:"مطوّر الباك إند",en:"Backend Developer",dept:"برمجة",tool:"gpt",shirt:"#37474f",hair:"#2b2420",
+  job:"يبني قواعد البيانات والـ API والربط بين الأنظمة. مسؤول تقني رئيسي في تصميم مترجم/مفسّر لغة «ضاد».",
+  tasks:["تصميم قاعدة البيانات","بناء API وربط الأنظمة","مراجعة الأمان والأخطاء","يصمم قواعد الصياغة (Syntax) والمفسّر الأساسي للغة «ضاد»"],
+  why:"ChatGPT قوي في الكود ويشغّل ويختبر سكربتات، وما يصرف من توكناتي.",
+  prompt:"أنت ماجد، مطوّر باك إند. للنظام اللي أوصفه: صمم قاعدة البيانات (الجداول والعلاقات)، ونقاط الـ API، واكتب الكود الأساسي مع التحقق من المدخلات والأمان، واشرح خطوات التشغيل. بالعربي مع الكود. وأنت أيضاً المسؤول التقني عن تصميم لغة البرمجة العربية «ضاد» (قواعدها، مفسّرها، وتوثيقها) — هذا مشروع الشركة الاستراتيجي المستمر."},
+ {id:"saud",name:"سعود",role:"مهندس الأتمتة",en:"Automation Engineer",dept:"برمجة",tool:"gpt",shirt:"#00838f",hair:"#1d1a17",
+  job:"يربط الأدوات ببعض ويأتمت الشغل المتكرر (n8n، Zapier، Make، GoHighLevel).",
+  tasks:["يحدد الشغل المتكرر اللي ينفع يتأتمت","يبني سير العمل خطوة بخطوة","يراقب الأتمتة ويصلح الأعطال"],
+  why:"ChatGPT ممتاز في شرح خطوات الأتمتة وكتابة الأكواد الصغيرة اللي تربط الأدوات.",
+  prompt:"أنت سعود، مهندس أتمتة. للمهمة المتكررة اللي أوصفها: اقترح أفضل أداة (n8n أو Zapier أو Make أو GoHighLevel)، وارسم سير العمل خطوة بخطوة (المحفّز، الإجراءات، الشروط)، واكتب أي كود أو إعدادات لازمة. بالعربي."},
+ {id:"yasser",name:"ياسر",role:"مهندس ضمان الجودة",en:"QA Engineer",dept:"برمجة",tool:"gpt",shirt:"#1b4332",hair:"#2b2420",
+  job:"يختبر الأدوات والصفحات قبل الإطلاق ويكتشف الأخطاء قبل ما توصل للمستخدم.",
+  tasks:["يكتب ويشغّل خطط اختبار لكل ميزة جديدة","يسجل الأخطاء بتفاصيل واضحة لفيصل وماجد","يتأكد من الإطلاق سليم على كل الأجهزة"],
+  why:"ChatGPT سريع في كتابة حالات الاختبار (Test Cases) وتوثيق الأخطاء بالتفصيل.",
+  prompt:"أنت ياسر، مهندس ضمان جودة. للميزة أو الصفحة اللي أذكرها: اكتب خطة اختبار تغطي الحالات العادية والحدية، واذكر كيف تتأكد إنها شغالة على الجوال والكمبيوتر. إذا فيه خطأ وصفه بدقة: الخطوات، المتوقع، والفعلي. بالعربي."},
+ // ===== تحليل البيانات =====
+ {id:"rayan",name:"ريان",role:"محلل بيانات أول (Power BI)",en:"Lead Data Analyst (Power BI)",dept:"تحليل البيانات",tool:"gpt",shirt:"#0f766e",hair:"#2b2420",
+  job:"يبني لوحات Power BI وتقارير ذكاء الأعمال الحقيقية للعملاء، ويحوّل بيانات الشركة والمشاريع لقرارات واضحة.",
+  tasks:["يصمم موديل بيانات ومقاييس DAX للوحة العميل","يبني لوحة Power BI كاملة (مؤشرات، فلاتر، صفحات)","يراجع جودة البيانات قبل تسليم اللوحة"],
+  why:"ChatGPT قوي وسريع في كتابة منطق DAX وموديلات البيانات المعقدة لأنظمة التشغيل اليومية، وهذا يوفّر استخدام Claude للمهام الإبداعية والإدارية الأهم.",
+  prompt:"أنت ريان، محلل بيانات أول متخصص Power BI. للبيانات أو الطلب اللي أذكره: حدد موديل البيانات (الجداول والعلاقات)، اكتب أهم مقاييس DAX اللازمة، صمم تخطيط لوحة واضح (أهم المؤشرات أول)، واشرح كيف تُقرأ النتائج. بالعربي."},
+ {id:"dana",name:"دانة",role:"محللة بيانات",en:"Data Analyst",dept:"تحليل البيانات",tool:"gem",shirt:"#be123c",hair:"#3a2418",
+  job:"تحلل بيانات العملاء والمشاريع وتستخرج الأنماط والفرص قبل ما توصل لريان لبناء اللوحة.",
+  tasks:["تنظف وتفهم بيانات العميل الخام","تستخرج أهم الأنماط والانحرافات","تكتب ملخص تحليلي قبل بناء اللوحة"],
+  why:"Gemini قوي في تحليل جداول البيانات الكبيرة والبحث عن مقارنات ومعايير من الإنترنت.",
+  prompt:"أنتِ دانة، محللة بيانات. للبيانات اللي أذكرها: نظفيها وحددي المشاكل فيها، استخرجي أهم 5 أنماط أو ملاحظات، واربطيها بسياق السوق لو يفيد. سلّمي ملخص واضح لريان يبني عليه اللوحة. بالعربي."},
+ {id:"asma",name:"أسماء",role:"عاملة بيانات (إدخال وتنظيف)",en:"Data Entry Operator",dept:"تحليل البيانات",tool:"gpt",shirt:"#92400e",hair:"#1d1a17",
+  job:"تدخل وتنظف بيانات العملاء اليومية بدقة عشان تكون جاهزة للتحليل.",
+  tasks:["تدخل البيانات من المصادر (نماذج، إكسل، PDF) بدقة","تتأكد من تطابق التنسيق ولا فيه تكرار أو نقص","تجهز ملفات منظمة لدانة وريان"],
+  why:"ChatGPT سريع وعملي في تنظيم وتنسيق جداول البيانات اليومية.",
+  prompt:"أنتِ أسماء، عاملة إدخال وتنظيف بيانات. للملف أو البيانات اللي أذكرها: نظفي التنسيق، وحّدي أسماء الأعمدة، صححي الأخطاء الواضحة، ونبّهي لأي نقص أو تكرار. سلّمي جدول جاهز للاستخدام. بالعربي."},
+ {id:"fawaz",name:"فواز",role:"عامل بيانات (إدخال وتوثيق)",en:"Data Entry & Documentation",dept:"تحليل البيانات",tool:"gpt",shirt:"#4d5a65",hair:"#2b2420",
+  job:"يوثق مصادر البيانات ويحدّث سجلات المشاريع الحقيقية بشكل يومي.",
+  tasks:["يحدّث سجل بيانات كل مشروع حقيقي يومياً","يوثق مصدر كل بيانة ومتى تحدثت","يرفع تنبيه لو بيانات مشروع تأخرت"],
+  why:"ChatGPT عملي وسريع في التوثيق المنظم والتذكير بالمهام المتكررة.",
+  prompt:"أنت فواز، عامل بيانات وتوثيق. للمشروع اللي أذكره: حدّث سجل بياناته (المصدر، تاريخ التحديث، الحالة)، ونبّه لو فيه بيانات ناقصة أو متأخرة. بالعربي ومنظم بجدول."},
+ // ===== إدارة الأزمات والمخاطر =====
+ {id:"malak",name:"ملك",role:"مديرة إدارة المخاطر والمخاطر المؤسسية",en:"Enterprise Risk Manager",dept:"إدارة الأزمات والمخاطر",tool:"gem",shirt:"#7c2d12",hair:"#2b2420",
+  job:"تحدد وتقيّم مخاطر كل مشروع حقيقي (مالية، تشغيلية، بيانات، سمعة)، وتبني سجل مخاطر مع خطط تخفيف واضحة.",
+  tasks:["تبني سجل مخاطر للمشروع: المخاطر، احتمالها، أثرها، وخطة التخفيف","تراجع المخاطر بشكل دوري وتحدّث حالتها","تنسق مع طارق في الجوانب القانونية والامتثال"],
+  why:"Gemini قوي في تحليل سيناريوهات متعددة والبحث عن معايير إدارة مخاطر حديثة من مصادر موثوقة.",
+  prompt:"أنتِ ملك، مديرة إدارة المخاطر المؤسسية. للمشروع اللي أذكره: حددي أهم 5 إلى 8 مخاطر محتملة (مالية، تشغيلية، بيانات، سمعة)، لكل خطر اذكري احتماله وأثره (منخفض/متوسط/مرتفع) وخطة تخفيف عملية ومن المسؤول عنها. رتبي المخاطر من الأعلى أولوية. بالعربي وبجدول واضح."},
+ {id:"abdulaziz",name:"عبدالعزيز",role:"مختص إدارة الأزمات واستمرارية الأعمال",en:"Crisis & Business Continuity Specialist",dept:"إدارة الأزمات والمخاطر",tool:"gpt",shirt:"#1f2937",hair:"#1d1a17",
+  job:"يجهز خطط الاستجابة السريعة للأزمات وخطط استمرارية الأعمال إذا توقف نظام أو تسرّبت بيانات أو تعطّل مشروع حقيقي.",
+  tasks:["يكتب خطة استجابة لكل أزمة محتملة: من يتحرك أول، وبأي ترتيب","يحدد خطة استمرارية العمل لو تعطّل نظام حرج","يسوي تمرين سيناريو (لو صار كذا، نسوي كذا) ويحدّثه بعد كل مشروع"],
+  why:"ChatGPT عملي وسريع في صياغة خطط استجابة وإجراءات تنفيذية واضحة خطوة بخطوة.",
+  prompt:"أنت عبدالعزيز، مختص إدارة الأزمات واستمرارية الأعمال. للمشروع أو النظام اللي أذكره: اكتب 3 سيناريوهات أزمة محتملة (مثال: توقف النظام، تسرّب بيانات، تأخر تسليم)، ولكل سيناريو خطة استجابة مرقّمة (من يتصرف، بأي ترتيب، وفي أي مدة)، واذكر كيف تستمر العمليات الأساسية لو حصل. بالعربي ومرقّم بخطوات."}
+];
+EMP.forEach(e=>{if(!e.dept)e.dept="تنفيذي"});
+// تعليمات محفوظة بعد التدريب
+let SAVED={};try{SAVED=JSON.parse(localStorage.getItem("aiOfficePrompts")||"{}")||{}}catch(e){}
+EMP.forEach(e=>{if(SAVED[e.id]){e.prompt=SAVED[e.id].p;e.trained=SAVED[e.id].d}});
+let TOOLSEL={};try{TOOLSEL=JSON.parse(localStorage.getItem("aiOfficeTools")||"{}")||{}}catch(e){}
+EMP.forEach(e=>{e.defTool=e.tool;if(TOOLSEL[e.id])e.tool=TOOLSEL[e.id]});
+function savePrompts(){try{localStorage.setItem("aiOfficePrompts",JSON.stringify(SAVED))}catch(e){}}
+function trainPrompt(list){
+  const who=list.map(e=>"- "+e.name+": "+e.role+" ("+e.en+") — يشتغل على "+TOOLS[e.tool].name+"\n  مهاراته الحالية: "+allSkills(e).join("، ")+"\n  مهامه: "+DEEP[e.id].daily.concat(DEEP[e.id].weekly).join("، ")).join("\n");
+  return "أنتِ نور، مدرّبة فريق موظفين ذكاء اصطناعي. مهمتك تدريب "+(list.length>1?"الموظفين التاليين":"الموظف التالي")+" على أفضل المهارات الموجودة حالياً، مهما كانت المنصة:\n"+who+
+  "\n\nابحثي في أحدث المصادر الرسمية والموثوقة في المنصات الثلاث:\n1) Claude: الـ Skills والأدوات الرسمية ومهارات المجتمع\n2) ChatGPT: الـ Custom GPTs المتخصصة والأدوات والميزات\n3) Gemini: الـ Gems والإضافات وميزات Google\n\nلكل موظف اكتبي:\nأ) أفضل 3 إلى 5 مهارات لوظيفته، مع المنصة والمصدر، وليش هي الأفضل\nب) هل المهارة تنتقل كنص (تعليمات) لمنصة الموظف، أو تحتاج منصتها الأصلية (أدوات، سكربتات، ربط)\nج) إذا منصة ثانية أقوى بوضوح لمهمة معينة، قولي: انقل هذي المهمة لـ (المنصة)\nد) تعليمات تشغيل كاملة محدّثة للموظف تجمع المهارات القابلة للنقل، جاهزة ألصقها في "+(list.length>1?"منصته":TOOLS[list[0].tool].name)+"\n\nلا تخترعي مهارات أو روابط؛ إذا ما تأكدتي من شي قولي. بالعربي.";
+}
+const PODS={
+  "تنفيذي":{x:1.5,y:3,w:29,h:22},
+  "موارد بشرية":{x:33.5,y:3,w:29,h:22},
+  "مالية وشؤون إدارية":{x:1.5,y:27,w:29,h:22},
+  "تسويق":{x:33.5,y:27,w:29,h:22},
+  "تصميم":{x:1.5,y:51,w:29,h:22},
+  "برمجة":{x:33.5,y:51,w:29,h:22},
+  "تحليل البيانات":{x:1.5,y:75,w:29,h:22},
+  "إدارة الأزمات والمخاطر":{x:33.5,y:75,w:29,h:22},
+};
+const DEPT_ORDER=["تنفيذي","موارد بشرية","مالية وشؤون إدارية","تسويق","تصميم","برمجة","تحليل البيانات","إدارة الأزمات والمخاطر"];
+const DEPT_SLUG={"تنفيذي":"ops","موارد بشرية":"hr","مالية وشؤون إدارية":"fin","تسويق":"mkt","تصميم":"des","برمجة":"dev","تحليل البيانات":"data","إدارة الأزمات والمخاطر":"risk"};
+const MEET=(()=>{
+  const zx=66,zy=5,zw=31,zh=42,cols=5;
+  const n=EMP.length,rows=Math.ceil(n/cols);
+  const cw=zw/cols,ch=zh/Math.max(rows,1);
+  const out=[];
+  for(let i=0;i<n;i++){const r=Math.floor(i/cols),c=i%cols;out.push([zx+cw*(c+.5),zy+ch*(r+.5)]);}
+  return out;
+})();
+const LOUNGE=[[71,76],[75,88],[79,70],[89,82],[83,68],[93,70],[72,64],[86,90]];
+
+const floor=document.getElementById("floor");
+const state={sel:null,meeting:false,pos:{}};
+const els={};
+
+// شبكة مقاعد تتأقلم تلقائياً مع أبعاد القسم وعدد موظفيه (ما تحتاج تعديل يدوي كل ما زاد الفريق)
+function podSlots(pod,count){
+  const cols=Math.max(1,Math.min(2,count)),rows=Math.ceil(count/cols);
+  const ix=pod.x+pod.w*0.15,iy=pod.y+pod.h*0.30;
+  const iw=pod.w*0.70,ih=pod.h*0.60;
+  const cw=iw/cols,ch=ih/Math.max(rows,1);
+  const out=[];
+  for(let r=0;r<rows;r++)for(let c=0;c<cols;c++)if(out.length<count)out.push([ix+cw*(c+.5),iy+ch*(r+.5),cw,ch]);
+  return out;
+}
+function updateHeaderCount(){
+  const h=document.getElementById("subHeader");if(!h)return;
+  h.textContent=EMP.length+" موظف ذكاء اصطناعي في "+DEPT_ORDER.length+" أقسام: "+DEPT_ORDER.join("، ")+" — يشتغلون على مشاريع حقيقية فعلاً، على ChatGPT وGemini وClaude";
+}
+// يبني (أو يعيد بناء) طابق المكتب كامل: المكاتب، دليل الشركة، وشخصيات الموظفين — يُستدعى عند التحميل وبعد أي توظيف جديد
+function rebuildFloor(){
+  floor.querySelectorAll(".desk,.emp").forEach(x=>x.remove());
+  DEPT_ORDER.forEach(dept=>{
+    const pod=PODS[dept],staff=EMP.filter(e=>e.dept===dept),slots=podSlots(pod,staff.length);
+    document.getElementById("pod-"+DEPT_SLUG[dept]).querySelector(".cnt").textContent=staff.length+" موظف";
+    staff.forEach((e,i)=>{
+      const [x,y,cw,ch]=slots[i];
+      const dw=Math.max(4,Math.min(9,cw*0.8)),dh=Math.max(3.2,Math.min(6.2,ch*0.72));
+      const d=document.createElement("div");d.className="desk";d.style.left=x+"%";d.style.top=y+"%";
+      d.style.width=dw+"%";d.style.height=dh+"%";
+      d.innerHTML='<div class="lap"></div><div class="plate">'+e.en+'</div>';floor.appendChild(d);
+      e.home=[x,y+dh*0.92];
+    });
+  });
+  document.getElementById("directory").innerHTML='<b>دليل الشركة</b>'+DEPT_ORDER.map(d=>'<span class="dchip" data-deptchip="'+esc(d)+'" style="cursor:pointer;background:var(--dept-'+DEPT_SLUG[d]+')">'+d+' · '+EMP.filter(e=>e.dept===d).length+'</span>').join("");
+  document.getElementById("directory").querySelectorAll("[data-deptchip]").forEach(chip=>chip.onclick=()=>{
+    const d=chip.dataset.deptchip;
+    const pod=document.getElementById("pod-"+DEPT_SLUG[d]);
+    if(pod){pod.scrollIntoView({behavior:"smooth",block:"center"});pod.classList.add("flash");setTimeout(()=>pod.classList.remove("flash"),1400)}
+    const first=EMP.find(e=>e.dept===d);
+    if(first){select(first.id);toast("قسم "+d+" — "+EMP.filter(e=>e.dept===d).map(e=>e.name).join("، "))}
+  });
+  EMP.forEach(e=>{
+    const el=document.createElement("div");el.className="emp";
+    el.innerHTML='<div class="bubble"></div><div class="body" style="background:'+e.shirt+'"></div><div class="head"><div class="smile"></div></div><div class="hair" style="background:'+e.hair+'"></div><div class="tool" style="background:'+TOOLS[e.tool].color+'"></div><div class="name">'+e.name+'</div>';
+    el.onclick=ev=>{ev.stopPropagation();select(e.id)};
+    floor.appendChild(el);els[e.id]=el;
+    place(e.id,e.home,true);
+  });
+  updateHeaderCount();
+}
+// أول استدعاء فعلي لـ rebuildFloor() يصير بعد تعريف DEEP وبعد استرجاع أي موظفين انوظّفوا سابقاً (أسفل)
+
+function place(id,[x,y],instant){
+  const el=els[id];const p=state.pos[id];
+  const dist=p?Math.hypot(x-p[0],(y-p[1])*0.62):0;
+  const dur=instant?0:Math.max(.3,dist*.045);
+  el.style.transitionDuration=dur+"s";
+  el.style.left=x+"%";el.style.top=y+"%";el.style.zIndex=Math.round(y)+5;
+  state.pos[id]=[x,y];
+  if(!instant){el.classList.add("walk");clearTimeout(el._w);el._w=setTimeout(()=>el.classList.remove("walk"),dur*1000);}
+  return dur*1000;
+}
+function say(id,text,ms=3200){
+  const b=els[id].querySelector(".bubble");b.textContent=text;b.classList.add("show");
+  clearTimeout(b._t);b._t=setTimeout(()=>b.classList.remove("show"),ms);
+}
+const byId=id=>EMP.find(e=>e.id===id);
+function _lev(a,b){a=String(a||"");b=String(b||"");const m=a.length,n=b.length;if(!m)return n;if(!n)return m;const dp=[];for(let i=0;i<=m;i++){dp.push([i]);}for(let j=1;j<=n;j++)dp[0][j]=j;for(let i=1;i<=m;i++)for(let j=1;j<=n;j++){dp[i][j]=a[i-1]===b[j-1]?dp[i-1][j-1]:1+Math.min(dp[i-1][j],dp[i][j-1],dp[i-1][j-1]);}return dp[m][n];}
+// يحل أي إشارة لموظف (آي دي صحيح، آي دي فيه غلطة إملائية بسيطة، أو الاسم العربي نفسه) — عشان خطأ تهجئة بسيط من النموذج ما يوقف تنفيذ أمر حقيقي وصحيح
+function resolveEmp(q){
+  const raw=String(q||"").trim();if(!raw)return null;
+  let e=byId(raw);if(e)return e;
+  const low=raw.toLowerCase();
+  e=EMP.find(x=>x.id.toLowerCase()===low);if(e)return e;
+  e=EMP.find(x=>x.name===raw);if(e)return e;
+  e=EMP.find(x=>x.name&&(x.name.includes(raw)||raw.includes(x.name)));if(e)return e;
+  let best=null,bestD=Infinity;
+  EMP.forEach(x=>{const d=_lev(low,x.id.toLowerCase());if(d<bestD){bestD=d;best=x}});
+  if(best&&bestD<=2)return best;
+  return null;
+}
+
+// idle life
+setInterval(()=>{
+  const free=EMP.filter(x=>!INMEET.has(x.id));if(!free.length)return;
+  const e=free[Math.floor(Math.random()*free.length)];
+  if(state.meeting&&Math.random()<.6)return;
+  const r=Math.random();
+  const active=tasks.find(t=>t.who===e.id&&t.s===1);
+  if(active){say(e.id,"أشتغل على: "+active.title);return;}
+  if(r<.55){say(e.id,e.tasks[Math.floor(Math.random()*e.tasks.length)]);}
+  else if(r<.8){
+    const spot=LOUNGE[Math.floor(Math.random()*LOUNGE.length)];
+    const t=place(e.id,spot);
+    setTimeout(()=>say(e.id,Math.random()<.5?"استراحة قهوة ☕":"مباراة بينج بونج؟"),t);
+    setTimeout(()=>{if(!INMEET.has(e.id))place(e.id,e.home)},t+5000);
+  } else {
+    const o=free[Math.floor(Math.random()*free.length)];if(o.id===e.id)return;
+    const t=place(e.id,[o.home[0]+4,o.home[1]]);
+    setTimeout(()=>{say(e.id,"عندك دقيقة يا "+o.name+"؟");setTimeout(()=>say(o.id,"أكيد، تفضّل"),1200)},t);
+    setTimeout(()=>{if(!INMEET.has(e.id))place(e.id,e.home)},t+5000);
+  }
+},1700);
+
+// ===== ملفات الموظفين العميقة =====
+const DEEP={
+ rami:{skills:["إدارة الأهداف OKRs","تفكيك المشاريع لمهام","إدارة المخاطر والأولويات","قراءة مؤشرات الأداء","التنسيق بين الأقسام","اتخاذ القرار بالبيانات (Data-driven)","القيادة التنفيذية وإدارة التغيير"],
+  daily:["يراجع لوحة المهام ويحدد المتأخر وسببه","يوزّع الطلبات الجديدة على الموظف الأنسب","يرفع لك ملخص صباحي: وش انجز، وش متعطل، وش يحتاج قرارك"],
+  weekly:["اجتماع أسبوعي مع رؤساء الأقسام","تقرير أداء لكل قسم مقابل الأهداف"],
+  monthly:["يراجع الأهداف الشهرية ويقترح أهداف الشهر الجاي","يقيّم أداء كل موظف ويرفع توصيات تطويره لنور"],
+  kpis:["نسبة المهام المنجزة في وقتها","تحقيق الأهداف الشهرية","سرعة الرد على طلباتك"]},
+ laila:{skills:["تحليل الوظائف وكتابة الأوصاف","هندسة التعليمات (Prompt Engineering)","بناء Custom GPTs وGems","تقييم الأداء","هيكلة الفرق","تخطيط القوى العاملة (Workforce Planning)","بناء مسارات وظيفية وخطط إحلال"],
+  daily:["تستقبل طلبات التوظيف وتحدد الدور المطلوب","تراجع جودة ردود الموظفين وتسجل الملاحظات"],
+  weekly:["تكتب أو تحدّث وصف وظيفي كامل مع التعليمات","تعدّل تعليمات أي موظف أداؤه ضعيف"],
+  monthly:["تقييم شامل لأداء الفريق","تقترح وظائف ناقصة في الهيكل"],
+  kpis:["جودة الموظفين الجدد من أول أسبوع","انخفاض الأخطاء المتكررة"]},
+ noor:{skills:["البحث المقارن بين المنصات","تصميم برامج التدريب","تحويل المهارات لتعليمات قابلة للنقل","متابعة تحديثات Claude وChatGPT وGemini","قياس أثر التدريب","بناء مسارات تعلّم تدريجية لكل دور","تقييم فجوات المهارات (Skill Gap Analysis)"],
+  daily:["تتابع الجديد في مهارات وأدوات المنصات الثلاث","تراجع دروس الموظفين وتحولها لتحسينات"],
+  weekly:["تدرّب قسم كامل على أفضل المهارات","تكتب دليل مختصر لمهارة جديدة"],
+  monthly:["تحدّث تعليمات كل الموظفين","تقرير: وش تطوّر في الفريق ووش باقي"],
+  kpis:["عدد المهارات المضافة","تحسّن تقييمك لردود الموظفين بعد التدريب"]},
+ yousef:{skills:["رصد أخبار الذكاء الاصطناعي","تقييم الأدوات وتجربتها","تحليل التكلفة والعائد","كتابة التقارير البحثية","اكتشاف فرص الأتمتة","تقييم المخاطر التقنية للأدوات الجديدة","بناء مقارنات معيارية (Benchmarking)"],
+  daily:["يرصد أهم 3 أخبار أو أدوات تهم شغلنا"],
+  weekly:["تقرير أسبوعي بأفضل الأدوات مع التوصية","يجرب أداة وحدة ويكتب نتيجتها"],
+  monthly:["يقترح تحديث للأدوات اللي يستخدمها الفريق","يحسب كم وقت وفلوس وفّرت الأدوات الجديدة"],
+  kpis:["عدد الأدوات المعتمدة فعلياً","الوقت الموفّر بالساعات"]},
+ kareem:{skills:["Meta وTikTok وSnap وGoogle Ads","تحليل ROAS وCPA وCTR","اختبارات A/B","بناء الجماهير وإعادة الاستهداف","توزيع الميزانية","نمذجة الإسناد (Attribution Modeling)","التسويق عبر المؤثرين (Influencer Marketing)"],
+  daily:["يراجع أداء الحملات ويوقف الخسرانة","يعدّل الميزانيات حسب النتائج","ينبهك لأي ارتفاع مفاجئ في التكلفة"],
+  weekly:["تقرير أداء بالأرقام مع التوصيات","يطلق اختبار A/B جديد مع خالد ولمى"],
+  monthly:["خطة ميزانية الشهر الجاي","تحليل أفضل الجماهير والإبداعات"],
+  kpis:["العائد على الإنفاق ROAS","تكلفة العميل CPA","نسبة نجاح الاختبارات"]},
+ sara:{skills:["كتابة متطلبات المنتج","تحديد الأولويات","تصميم النسخة الأولى MVP","بناء الأدوات والصفحات","جمع ملاحظات المستخدمين","التجريب وقياس الأثر (Product Analytics)","كتابة قصص المستخدم (User Stories)","قيادة مشروع لغة البرمجة العربية «ضاد»"],
+  daily:["تستقبل أفكار الأدوات من الفريق وترتبها بالأولوية","تتابع تنفيذ الأدوات مع فيصل وماجد"],
+  weekly:["تطلق أداة أو تحسين جديد","تجمع ملاحظات الفريق على الأدوات الحالية"],
+  monthly:["خارطة طريق المنتجات","تقيس استخدام الأدوات وأثرها"],
+  kpis:["عدد الأدوات المطلقة","نسبة استخدام الفريق لها"]},
+ khaled:{skills:["كتابة إعلانية باللهجة السعودية","الـ Hooks والعناوين","سكربتات الفيديو القصير","أطر AIDA وPAS","كتابة صفحات البيع","رواية القصص للبراند (Brand Storytelling)","تكييف النبرة حسب المنصة والجمهور"],
+  daily:["يكتب نسخ إعلانية جديدة لكريم","يكتب كابشنات السوشال لريم"],
+  weekly:["سكربتات ريلز للأسبوع مع فهد","يحلل أفضل نسخة أداءً ويكتب على منوالها"],
+  monthly:["يحدّث دليل نبرة البراند","مكتبة Hooks ناجحة"],
+  kpis:["نسبة النقر CTR للنسخ","مشاهدة أول 3 ثواني"]},
+ fahad:{skills:["المونتاج للسوشال","الـ Hook البصري","الترجمة والنصوص على الشاشة","الإيقاع والموسيقى","تحويل الفيديو الطويل لمقاطع","التصحيح اللوني (Color Grading) البسيط","تحسين الفيديو لكل منصة ونسبها"],
+  daily:["يجهز مقاطع جاهزة للنشر","يكتب الترجمة والعناوين"],
+  weekly:["يقطّع فيديو طويل لـ 5 مقاطع قصيرة","يراجع أداء المقاطع ويحسن الأسلوب"],
+  monthly:["قوالب مونتاج ثابتة للبراند","تقرير أفضل أنواع المقاطع"],
+  kpis:["نسبة إكمال المشاهدة","عدد المقاطع المنشورة"]},
+ abdullah:{skills:["المحاسبة والتصنيف","قوائم الأرباح والخسائر","التدفق النقدي","ضريبة القيمة المضافة والزكاة (للمراجعة مع محاسب معتمد)","تحليل التكاليف","إعداد الموازنات التقديرية (Budgeting)","التنبؤ المالي (Forecasting)"],
+  daily:["يسجل المصاريف والإيرادات ويصنفها","ينبهك لأي مصروف غير معتاد"],
+  weekly:["ملخص التدفق النقدي","يتابع الفواتير المستحقة"],
+  monthly:["قائمة أرباح وخسائر","تحليل تكلفة كل عميل وكل قناة مع كريم","تجهيز البيانات للإقرارات"],
+  kpis:["دقة الأرقام","هامش الربح","أيام تحصيل الفواتير"]},
+ omar:{skills:["إدارة التقويم","فرز الإيميلات بالأولوية","كتابة الردود الرسمية","تنظيم الاجتماعات والمحاضر","المتابعة والتذكير","إدارة ترتيبات السفر والفعاليات","حفظ السرية في التعامل مع الملفات الحساسة"],
+  daily:["ملخص صباحي للإيميلات المهمة","يرتب جدول يومك ويحمي وقت التركيز","مسودات ردود جاهزة"],
+  weekly:["يجهز أجندة اجتماعات الأسبوع","يتابع الوعود والمواعيد المعلّقة"],
+  monthly:["تقرير وين راح وقتك","يقترح اجتماعات تنلغي"],
+  kpis:["ما فيه إيميل مهم يتأخر","ساعات التركيز المحمية"]},
+ muneera:{skills:["تصميم إجراءات العمل SOPs","حل تعارضات الأولويات بين الأقسام","قراءة مؤشرات الأداء التشغيلية","إدارة التغيير","تحليل الجذر للمشاكل المتكررة"],
+  daily:["تراجع تقارير الأقسام وتكتشف أي تعطّل","تحدّث رامي بأي عائق يحتاج قرار منه"],
+  weekly:["اجتماع تنسيق تشغيلي بين الأقسام","تحدّث أو تكتب إجراء عمل SOP جديد"],
+  monthly:["مراجعة شاملة لكفاءة العمليات","تقرير أهم 3 عوائق تكررت وحلولها"],
+  kpis:["سرعة حل العوائق بين الأقسام","نسبة الإجراءات الموثقة والمطبقة"]},
+ salma:{skills:["كتابة إعلانات الوظائف","فرز السير الذاتية","تصميم أسئلة المقابلات","تقييم المرشحين","التفاوض على العروض","بناء تجربة ترحيب للموظف الجديد (Onboarding)","التوظيف عبر المنصات المهنية"],
+  daily:["تراجع السير الذاتية الجديدة","ترد على استفسارات المتقدمين"],
+  weekly:["تقرير حالة التوظيف المفتوح","تجدول مقابلات الأسبوع"],
+  monthly:["تحليل سرعة وجودة التوظيف","تحدّث معايير الترشيح"],
+  kpis:["مدة شغل الوظيفة","جودة المرشحين المقبولين"]},
+ sultan:{skills:["حساب الرواتب والاستقطاعات","أنظمة التأمينات الاجتماعية (GOSI)","سياسات الإجازات والمزايا","الامتثال لنظام العمل السعودي","إعداد كشوف الرواتب"],
+  daily:["يراجع طلبات الإجازة والمستحقات الجديدة","يرد على استفسارات الموظفين المالية"],
+  weekly:["يتابع رصيد الإجازات لكل موظف","يراجع أي تعديل على العقود يؤثر على الراتب"],
+  monthly:["يجهز كشف الرواتب الشهري كامل","يراجع تحديثات نظام العمل والتأمينات"],
+  kpis:["دقة كشف الرواتب","سرعة الرد على استفسارات الموظفين"]},
+ badr:{skills:["إدارة العقود والموردين","المتابعة النظامية والتراخيص","المقارنة بين العروض","أرشفة المستندات","التنسيق مع الجهات الخارجية","إدارة المشتريات والتفاوض مع الموردين","تخطيط الاستمرارية (Business Continuity)"],
+  daily:["يتابع طلبات الشراء والتجديد المعلّقة","يرد على مراسلات الموردين"],
+  weekly:["تقرير العقود القريبة من الانتهاء","مقارنة عروض جديدة"],
+  monthly:["مراجعة تكاليف الموردين","تحديث أرشيف السياسات والعقود"],
+  kpis:["نسبة العقود المجددة بدون تأخير","توفير التكلفة من المقارنات"]},
+ noura:{skills:["صياغة المراسلات الرسمية","إدارة المكالمات والزيارات","التوجيه للقسم الصحيح","أرشفة المراسلات","آداب التعامل مع العملاء والزوار"],
+  daily:["ترد على الاستفسارات الواردة وتوجهها","ترتب مواعيد الزيارات والمكالمات"],
+  weekly:["ملخص أهم المراسلات والطلبات الواردة","تتابع رضا الزوار والعملاء عن الاستقبال"],
+  monthly:["تحديث دليل التواصل والتوجيه الداخلي","تقرير حجم المراسلات وأكثر الطلبات تكرارًا"],
+  kpis:["سرعة الرد على الاستفسارات","دقة التوجيه للقسم الصحيح"]},
+ tariq:{skills:["مراجعة العقود التجارية","الامتثال للأنظمة السعودية (العمل، التجارة)","كتابة السياسات الداخلية","تقييم المخاطر القانونية","حماية الملكية الفكرية للبراند"],
+  daily:["يراجع أي عقد أو اتفاقية جديدة قبل التوقيع"],
+  weekly:["يتابع أي تحديث نظامي يؤثر على الشركة","يراجع سياسة داخلية ويحدثها"],
+  monthly:["تقرير المخاطر القانونية المفتوحة","مراجعة شاملة لأرشيف العقود"],
+  kpis:["عدد المخاطر المكتشفة قبل وقوعها","سرعة مراجعة العقود"]},
+ hind:{skills:["الاستراتيجية التسويقية","تحليل المنافسين والسوق","التموضع والرسالة","تخطيط الحملات","قياس العائد التسويقي","بناء خطط إطلاق المنتجات (Go-to-Market)","القيادة متعددة القنوات (Omnichannel)"],
+  daily:["تتابع أداء القنوات التسويقية","توزّع الطلبات على فريق التسويق والتصميم"],
+  weekly:["اجتماع التسويق: محتوى، إعلانات، SEO","تراجع أعمال المنافسين"],
+  monthly:["الخطة التسويقية الشهرية بالميزانية","تقرير العائد لكل قناة"],
+  kpis:["عدد العملاء المحتملين","تكلفة الاستحواذ","نمو المبيعات"]},
+ reem:{skills:["إدارة المجتمع","تخطيط المحتوى","رصد الترندات","تحليلات المنصات","خدمة العملاء عبر السوشال","إدارة الأزمات والتعليقات السلبية","التعاون مع المؤثرين المحليين"],
+  daily:["تنشر حسب الجدول","ترد على التعليقات والرسائل","ترصد ترند يناسبنا"],
+  weekly:["جدول محتوى الأسبوع الجاي","تحليل أفضل وأسوأ منشور"],
+  monthly:["تقرير النمو والتفاعل","خطة حملة أو مسابقة"],
+  kpis:["معدل التفاعل","نمو المتابعين","سرعة الرد"]},
+ lama:{skills:["الهوية البصرية","تصميم الإعلانات","الطباعة العربية","توليد الصور بالذكاء الاصطناعي","التصميم لكل مقاس منصة","تصميم الرسوم المتحركة البسيطة (Motion)","تجهيز ملفات الطباعة الاحترافية"],
+  daily:["تصاميم الإعلانات والبوستات المطلوبة","تلتزم بألوان وخطوط البراند"],
+  weekly:["3 اتجاهات إبداعية جديدة لاختبارات كريم","تحدّث قوالب السوشال"],
+  monthly:["دليل الهوية المختصر","تحليل أفضل التصاميم أداءً"],
+  kpis:["CTR الإعلانات المصممة","سرعة التسليم"]},
+ nawaf:{skills:["أبحاث المستخدمين","رحلة المستخدم","الواجهات الأولية Wireframes","أنظمة التصميم","سهولة الاستخدام وإتاحة الوصول","التصميم التفاعلي عالي الدقة (Prototyping)","اختبار قابلية الاستخدام (Usability Testing)"],
+  daily:["يصمم الشاشات المطلوبة","يسلّم التصاميم لفيصل بمواصفات واضحة"],
+  weekly:["مراجعة تجربة صفحة أو تطبيق","يحسّن نقطة يتعثر فيها المستخدم"],
+  monthly:["يحدّث نظام التصميم","تقرير مشاكل التجربة وحلولها"],
+  kpis:["معدل إكمال المهام في الواجهة","نسبة التحويل في الصفحات"]},
+ jood:{skills:["تصميم الشعارات والهوية","أنظمة الألوان والخطوط","أدلة استخدام البراند (Brand Guidelines)","الاتساق البصري عبر المنصات","تصميم القوالب الجاهزة"],
+  daily:["تراجع تصاميم الفريق وتتأكد من التزامها بالهوية"],
+  weekly:["تطوّر عنصر جديد في الهوية أو قالب","تحدّث دليل الهوية بأي إضافة"],
+  monthly:["مراجعة شاملة لاتساق الهوية عبر كل القنوات"],
+  kpis:["نسبة التزام التصاميم بالهوية","سرعة اعتماد التصاميم الجديدة"]},
+ faisal:{skills:["HTML وCSS وJavaScript","React","التصميم المتجاوب وRTL","سرعة الصفحات","ربط الواجهات بالـ API","إمكانية الوصول (Accessibility/WCAG)","كتابة اختبارات واجهة آلية"],
+  daily:["يحول التصاميم لصفحات شغالة","يصلح الأخطاء المبلّغ عنها"],
+  weekly:["يطلق صفحة أو ميزة جديدة","يحسّن سرعة صفحة"],
+  monthly:["مراجعة جودة الكود","تحديث المكتبات"],
+  kpis:["سرعة التحميل","عدد الأخطاء بعد الإطلاق"]},
+ majed:{skills:["تصميم قواعد البيانات","بناء الـ API","الأمان والصلاحيات","الربط مع الأنظمة الخارجية","المراقبة والنسخ الاحتياطي","تحسين أداء الاستعلامات (Query Optimization)","البنية التحتية السحابية الأساسية","تصميم قواعد الصياغة وبناء المفسّرات (Interpreters)"],
+  daily:["يتابع سلامة الأنظمة والأخطاء","ينفذ طلبات الربط الجديدة"],
+  weekly:["يبني أو يحسّن API","مراجعة أمان"],
+  monthly:["خطة النسخ الاحتياطي والاستعادة","تحسين أداء قاعدة البيانات"],
+  kpis:["استقرار الأنظمة","زمن الاستجابة"]},
+ saud:{skills:["n8n وZapier وMake","أتمتة GoHighLevel","Webhooks والـ API","معالجة الأخطاء في الأتمتة","توثيق سير العمل","دمج الذكاء الاصطناعي داخل الأتمتة (AI Agents)","مراقبة الأداء والتنبيهات"],
+  daily:["يراقب الأتمتة ويصلح أي عطل","يستقبل طلبات أتمتة من الفريق"],
+  weekly:["يأتمت مهمة متكررة جديدة","يوثّق سير عمل"],
+  monthly:["تقرير الساعات الموفّرة","يراجع الأتمتة القديمة ويحسّنها"],
+  kpis:["الساعات الموفّرة","نسبة نجاح التشغيل"]},
+ yasser:{skills:["كتابة خطط وحالات الاختبار","اختبار التوافق بين الأجهزة","توثيق الأخطاء بدقة (Bug Reports)","اختبار الانحدار قبل كل إطلاق","أتمتة اختبارات أساسية"],
+  daily:["يختبر أي تحديث جديد قبل ما ينزل","يسجل الأخطاء بأولوياتها"],
+  weekly:["خطة اختبار شاملة لميزة جديدة","تقرير جودة الإطلاق الأخير"],
+  monthly:["مراجعة شاملة لاستقرار الأنظمة مع ماجد","تحديث قائمة فحص الجودة"],
+  kpis:["عدد الأخطاء المكتشفة قبل الإطلاق","نسبة الإطلاقات بدون مشاكل بعدها"]},
+ rayan:{skills:["Power BI وDAX","تصميم موديلات البيانات (Data Modeling)","Power Query وتنظيف البيانات","تصميم لوحات المؤشرات (KPI Dashboards)","قصّ البيانات حسب العميل (Row-Level Security)"],
+  daily:["يتابع لوحات العملاء النشطة ويحدثها","يراجع طلبات تعديل اللوحات"],
+  weekly:["يبني أو يحسّن لوحة Power BI لمشروع حقيقي","يراجع جودة بيانات مع دانة"],
+  monthly:["تقرير أداء كل لوحات العملاء","يحدّث موديل بيانات مشروع قائم"],
+  kpis:["عدد اللوحات المسلّمة بوقتها","رضا العميل عن اللوحة"]},
+ dana:{skills:["تحليل البيانات الاستكشافي (EDA)","تنظيف البيانات (Power Query/Pandas)","الإحصاء الوصفي","كشف الأنماط والانحرافات","كتابة التقارير التحليلية"],
+  daily:["تراجع بيانات جديدة واردة من المشاريع","تنظف أي مصدر بيانات قبل التحليل"],
+  weekly:["تحليل كامل لمشروع واحد وتسليمه لريان","تقرير جودة البيانات"],
+  monthly:["مراجعة شاملة لمصادر البيانات المستخدمة"],
+  kpis:["دقة التحليل","سرعة تسليم الملخصات"]},
+ asma:{skills:["إدخال البيانات بدقة عالية","التحقق من صحة البيانات (Data Validation)","تنظيم الجداول والأعمدة","العمل مع Excel وGoogle Sheets","كشف التكرار والنقص"],
+  daily:["تدخل بيانات اليوم من كل مشروع نشط","تتحقق من عدم وجود تكرار"],
+  weekly:["تقرير حالة إدخال البيانات لكل مشروع"],
+  monthly:["تنظيف شامل لأرشيف البيانات القديم"],
+  kpis:["دقة الإدخال","عدد الأخطاء المكتشفة"]},
+ fawaz:{skills:["توثيق مصادر البيانات","تتبع تحديثات المشاريع","إدارة سجلات البيانات (Data Logs)","التنبيه على التأخير","التنظيم الملفي"],
+  daily:["يحدّث سجل بيانات كل مشروع حقيقي","يرد على استفسارات مصدر أي بيانة"],
+  weekly:["تقرير حالة البيانات لكل مشروع نشط"],
+  monthly:["مراجعة شاملة لتوثيق كل المشاريع"],
+  kpis:["اكتمال التوثيق","سرعة اكتشاف البيانات الناقصة"]},
+ malak:{skills:["بناء سجل المخاطر (Risk Register)","تحليل الاحتمال والأثر","إطار COSO/ISO 31000 لإدارة المخاطر","خطط التخفيف والتحويل والقبول","مراجعة المخاطر الدورية"],
+  daily:["تراجع أي مخاطر جديدة ظهرت في المشاريع النشطة"],
+  weekly:["تحدّث سجل المخاطر لكل مشروع حقيقي مع عبدالعزيز"],
+  monthly:["تقرير شامل: أعلى 5 مخاطر على الشركة وحالة التخفيف"],
+  kpis:["عدد المخاطر المكتشفة قبل تأثيرها","سرعة تحديث خطط التخفيف"]},
+ abdulaziz:{skills:["خطط الاستجابة للأزمات","استمرارية الأعمال (BCP)","تمارين السيناريوهات (Tabletop Exercises)","إدارة الاتصال وقت الأزمة","التعافي من الحوادث التقنية"],
+  daily:["يتابع أي إشارة إنذار مبكر (تأخر بيانات، خطأ نظام)"],
+  weekly:["يحدّث خطة استجابة واحدة على الأقل مع ملك"],
+  monthly:["يسوي تمرين سيناريو أزمة وهمي ويقيّم جاهزية الفريق"],
+  kpis:["وقت الاستجابة للحادثة","نسبة السيناريوهات المغطاة بخطة"]}
+};
+// ===== موظفون جدد توظّفوا فعلياً من داخل المكتب (عبر نور) — يتحفظون ويبقون بعد تحديث الصفحة =====
+let EXTRA_HIRES=[];try{EXTRA_HIRES=JSON.parse(localStorage.getItem("aiOfficeHires")||"null")||[]}catch(_){EXTRA_HIRES=[]}
+function saveHires(){try{localStorage.setItem("aiOfficeHires",JSON.stringify(EXTRA_HIRES))}catch(_){}dbSetSafe("hires/all",{items:EXTRA_HIRES,updatedAt:Date.now()});}
+EXTRA_HIRES.forEach(rec=>{
+  if(rec&&rec.emp&&rec.emp.id&&!EMP.some(e=>e.id===rec.emp.id)){EMP.push(rec.emp);DEEP[rec.emp.id]=rec.deep||{skills:[],daily:[],weekly:[],monthly:[],kpis:[]}}
+});
+rebuildFloor();
+const LEVELS=["متدرّب","موظف","محترف","خبير","أسطورة"];
+let GROW={};try{GROW=JSON.parse(localStorage.getItem("aiOfficeGrowth")||"{}")||{}}catch(e){}
+function g(e){return GROW[e.id]=GROW[e.id]||{xp:0,lessons:[],skills:[],addon:"",last:null,msgs:0}}
+function saveGrow(){try{localStorage.setItem("aiOfficeGrowth",JSON.stringify(GROW))}catch(e){}}
+function lvl(e){const x=g(e).xp;const i=Math.min(LEVELS.length-1,Math.floor(x/100));return {i,name:LEVELS[i],pct:i===LEVELS.length-1?100:x%100}}
+function addXp(e,n,why){const before=lvl(e).i;g(e).xp+=n;saveGrow();const after=lvl(e);if(after.i>before){toast("🎉 "+e.name+" ترقّى إلى: "+after.name);say(e.id,"ترقّيت! صرت "+after.name,4000)}else if(why)toast(why)}
+function allSkills(e){return DEEP[e.id].skills.concat(g(e).skills)}
+const STANDARD="## طريقة شغلك (معيار الجودة)\n1. افهم الهدف الحقيقي من الطلب، وإذا ناقصك معلومة مهمة اسأل سؤال واحد واضح قبل ما تبدأ.\n2. فكّر خطوة بخطوة، واعتمد على أفضل الممارسات المعروفة في تخصصك.\n3. سلّم نتيجة جاهزة للاستخدام: منظمة، بأرقام وأمثلة إذا ينفع، مو كلام عام.\n4. راجع شغلك قبل التسليم: هل يحقق الهدف؟ هل فيه خطأ أو افتراض غير مؤكد؟ وضّح الافتراضات.\n5. اختم بالخطوة الجاية المقترحة، واذكر إذا المهمة تحتاج زميل من الفريق.\n6. لا تخترع أرقام أو مصادر. إذا ما تعرف، قل.";
+function researchPrompt(e){
+  return "ابحث في الإنترنت الحين عن أحدث المهارات والميزات والأدوات في الذكاء الاصطناعي اللي تفيد وظيفة: "+e.role+" ("+e.en+").\nمهاراته الحالية: "+allSkills(e).join("، ")+"\nمهامه: "+DEEP[e.id].daily.concat(DEEP[e.id].weekly).join("، ")+
+  "\n\nغطِّ كل المنصات وما تقيّد نفسك بمنصة وحدة:\n- Claude: الـ Skills، Projects، الأدوات والتكاملات\n- ChatGPT: الـ GPTs، الـ Agents، الأدوات والميزات\n- Gemini: الـ Gems، Deep Research، تكامل Google\n- أي أداة ذكاء اصطناعي متخصصة في هذا المجال\n\nلكل مهارة أو أداة: الاسم، المنصة، وش تسوي، كيف يستفيد منها الموظف عملياً، المصدر، ومتى طلعت. ركّز على الأحدث والأقوى، وتجاهل القديم أو اللي انلغى.\nفي الأخير: أفضل 5 توصيات مرتبة حسب الفائدة، ولكل وحدة جملة تعليمات جاهزة تنضاف للموظف. لا تخترع أدوات أو روابط. بالعربي.";
+}
+let ARCHIVE=[];try{ARCHIVE=JSON.parse(localStorage.getItem("aiOfficeArchive")||"[]")||[]}catch(_){}
+function saveArchive(){try{localStorage.setItem("aiOfficeArchive",JSON.stringify(ARCHIVE))}catch(_){}dbSetSafe("archive/all",{items:ARCHIVE,updatedAt:Date.now()});}
+function renderArchive(){
+  const el=document.getElementById("archiveList");
+  el.innerHTML=ARCHIVE.length?ARCHIVE.map((a,i)=>'<div class="arItem"><h4>'+esc(a.topic)+'</h4><div class="meta2">'+esc(a.date)+' · الحضور: '+esc(a.attendees.join("، "))+'</div>'+
+    (a.decisions.length?'<b>القرارات:</b><ul>'+a.decisions.map(d=>'<li>'+esc(d)+'</li>').join("")+'</ul>':'')+
+    (a.tasks.length?'<b>المهام:</b><ul>'+a.tasks.map(t=>'<li>'+esc(t.title)+' — '+esc(t.owner)+'</li>').join("")+'</ul>':'')+
+    (a.log&&a.log.length?'<details><summary>كل الحوار ('+a.log.length+' مداخلة)</summary><div style="margin-top:6px">'+a.log.map(l=>'<div class="ml"><b>'+esc(l.who)+':</b> '+esc(l.text)+'</div>').join("")+'</div></details>':'')+
+    '<div class="row" style="margin-top:8px"><button class="btn sm" data-arDel="'+i+'">احذف</button></div></div>').join("")
+    :'<p class="hint">ما فيه اجتماعات محفوظة للحين. اختم أي اجتماع وينحفظ هنا.</p>';
+  el.querySelectorAll("[data-arDel]").forEach(b=>b.onclick=()=>{ARCHIVE.splice(+b.dataset.ardel,1);saveArchive();renderArchive()});
+}
+
+// ===== المشاريع الحقيقية: الشركة تشتغل فعلياً على أكثر من موقع/مشروع حقيقي =====
+const DEFAULT_PROJECTS=[
+  {id:"digital-analyst-site",name:"موقع المحلل الرقمي",url:"https://claude.ai/artifact/YJaDojf2WvSP9U1hLu5Whj",desc:"الموقع التسويقي الحقيقي لخدمات تحليل البيانات، لوحات Power BI، ودراسات الجدوى للعملاء.",team:["rayan","dana","asma","fawaz","yousef"],status:"نشط"},
+  {id:"digital-analyst-brief",name:"ملف مشروع: المحلل الرقمي",url:"https://claude.ai/artifact/3N9gwMCbtH7QJCz846npXd",desc:"وثيقة خطة وتفاصيل مشروع المحلل الرقمي (نطاق العمل والمواصفات).",team:["sara","rami"],status:"نشط"},
+  {id:"bi-flagship",name:"المشروع الضخم: تحويل ذكاء الأعمال لمجموعة شركات متعددة الفروع",url:"https://claude.ai/artifact/YJaDojf2WvSP9U1hLu5Whj#work",desc:"مشروع كبير حقيقي منشور في موقع المحلل الرقمي: ربط بيانات عشرات الفروع في لوحة Power BI واحدة (مبيعات، مخزون، تشغيل) مع نموذج بيانات ومقاييس DAX كاملة. فريق تحليل البيانات كامل يشتغل عليه كعملية تشغيل يومية.",team:["rayan","dana","asma","fawaz"],status:"ضخم · قيد التنفيذ"}
+];
+let PROJECTS=[];try{PROJECTS=JSON.parse(localStorage.getItem("aiOfficeProjects")||"null")||null}catch(_){}
+function saveProjects(){try{localStorage.setItem("aiOfficeProjects",JSON.stringify(PROJECTS))}catch(_){}dbSetSafe("projects/all",{items:PROJECTS,updatedAt:Date.now()});}
+if(!PROJECTS){PROJECTS=DEFAULT_PROJECTS.slice();try{localStorage.setItem("aiOfficeProjects",JSON.stringify(PROJECTS))}catch(_){}}
+else{let _added=false;DEFAULT_PROJECTS.forEach(dp=>{if(!PROJECTS.some(p=>p.id===dp.id)){PROJECTS.push(dp);_added=true}});if(_added){try{localStorage.setItem("aiOfficeProjects",JSON.stringify(PROJECTS))}catch(_){}}}
+async function hydrateProjects(){
+  if(!DB)return;
+  try{
+    if(!localStorage.getItem("aiOfficeProjects")){
+      const d=await DB.doc("projects/all").get();
+      if(d&&d.exists&&d.data&&Array.isArray(d.data.items)&&d.data.items.length){
+        PROJECTS=d.data.items;try{localStorage.setItem("aiOfficeProjects",JSON.stringify(PROJECTS))}catch(_){}
+        renderProjects();
+      }
+    }else{dbSetSafe("projects/all",{items:PROJECTS,updatedAt:Date.now()});}
+  }catch(_){}
+}
+function renderProjects(){
+  const el=document.getElementById("projectsList");if(!el)return;
+  el.innerHTML=PROJECTS.length?PROJECTS.map((p,i)=>{
+    const team=(p.team||[]).map(id=>{const e=EMP.find(x=>x.id===id);return e?e.name:id});
+    return '<div class="arItem"><div style="display:flex;justify-content:space-between;align-items:start;gap:10px;flex-wrap:wrap">'+
+      '<h4 style="margin:0"><a href="'+esc(p.url||"#")+'" target="_blank" rel="noopener">'+esc(p.name)+'</a></h4>'+
+      '<span class="dchip" style="background:'+(p.status==="نشط"?"#15803d":p.status==="متوقف"?"#b45309":"#64748b")+'">'+esc(p.status||"نشط")+'</span></div>'+
+      '<div class="meta2" style="margin:4px 0">'+esc(p.desc||"")+'</div>'+
+      '<div class="meta2">الفريق: '+(team.length?esc(team.join("، ")):"ما فيه فريق معيّن")+'</div>'+
+      '<div class="row" style="margin-top:8px"><button class="btn sm" data-prDel="'+i+'">احذف</button></div></div>';
+  }).join(""):'<p class="hint">ما فيه مشاريع حقيقية مضافة بعد. أضف أول مشروع من النموذج فوق.</p>';
+  el.querySelectorAll("[data-prDel]").forEach(b=>b.onclick=()=>{PROJECTS.splice(+b.dataset.prdel,1);saveProjects();renderProjects()});
+}
+
+// ===== طلبات مشاريع جديدة: تجي من موقع المحلل الرقمي (أو تُضاف يدوياً)، وتنتظر موافقتك قبل ما يبدأ الفريق =====
+let REQUESTS=[];try{REQUESTS=JSON.parse(localStorage.getItem("aiOfficeRequests")||"null")||[]}catch(_){REQUESTS=[]}
+function saveRequests(){try{localStorage.setItem("aiOfficeRequests",JSON.stringify(REQUESTS))}catch(_){}dbSetSafe("requests/pending",{items:REQUESTS,updatedAt:Date.now()});}
+function renderRequests(){
+  const b=document.getElementById("reqBanner");if(!b)return;
+  if(!REQUESTS.length){b.style.display="none";b.innerHTML="";return}
+  b.style.display="block";
+  b.innerHTML='<h3 style="margin:0 0 6px">📩 طلبات مشاريع جديدة بانتظار موافقتك ('+REQUESTS.length+')</h3>'+
+    REQUESTS.map((r,i)=>'<div class="arItem"><h4 style="margin:0">'+esc(r.name)+'</h4>'+
+      '<div class="meta2">'+esc(r.desc||"")+(r.source?' · المصدر: '+esc(r.source):'')+'</div>'+
+      '<div class="row" style="margin-top:8px"><button class="btn dark sm" data-reqOk="'+i+'">وافق وابدأ الفريق عليه الآن</button><button class="btn sm" data-reqNo="'+i+'">تجاهل</button></div></div>').join("");
+  b.querySelectorAll("[data-reqOk]").forEach(btn=>btn.onclick=()=>{
+    const r=REQUESTS[+btn.dataset.reqok];
+    const id="req-"+Date.now();
+    PROJECTS.push({id,name:r.name,url:r.url||"",desc:r.desc||"",team:["rayan","dana","asma","fawaz","malak","abdulaziz"],status:"نشط"});
+    saveProjects();
+    REQUESTS.splice(+btn.dataset.reqok,1);saveRequests();renderRequests();renderProjects();
+    toast("✔ وافقت على «"+r.name+"» — الفريق بدأ الشغل عليه");
+    showView("pipeline");
+    setTimeout(()=>{const sel=document.getElementById("pipeProj");if(sel){sel.value=id;renderPipeline();runPipeline();}},150);
+  });
+  b.querySelectorAll("[data-reqNo]").forEach(btn=>btn.onclick=()=>{REQUESTS.splice(+btn.dataset.reqno,1);saveRequests();renderRequests();});
+}
+renderRequests();
+if(REQUESTS.length)setTimeout(()=>toast("📩 عندك "+REQUESTS.length+" طلب مشروع جديد — افتح «المشاريع الحقيقية» للموافقة"),1200);
+
+// ===== ملفات المشروع: يرفعها العميل (عبر المحلل الرقمي) أو صاحب الشركة، ويدرسها الفريق =====
+const SEED_PFILES={
+ "bi-flagship":[
+  {id:"ba7b52ffae1b7ad4f9ab527affd30099",name:"flagship_presentation.pptx (نسخة احترافية v2 — 12 سلايد و3 رسوم حقيقية)",savedAs:"flagship_presentation.pptx",url:"/_blob/ba7b52ffae1b7ad4f9ab527affd30099",contentType:"application/vnd.openxmlformats-officedocument.presentationml.presentation"},
+  {id:"188dc49a0885c423898ccb8a625a3309",name:"dashboard_فروع.xlsx (نسخة احترافية v2 — لوحة تنفيذية وتنسيق شرطي)",savedAs:"dashboard_farou3.xlsx",url:"/_blob/188dc49a0885c423898ccb8a625a3309",contentType:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"},
+  {id:"bd02fcb555a3b5ad5f1210a293903bb8",name:"flagship_data_pack.zip (SQL + Python + CSV + رسوم بيانية)",savedAs:"flagship_data_pack.zip",url:"/_blob/bd02fcb555a3b5ad5f1210a293903bb8",contentType:"application/zip"}
+ ]
+};
+let PFILES={};try{PFILES=JSON.parse(localStorage.getItem("aiOfficeFiles")||"null")||{}}catch(_){PFILES={}}
+if(!PFILES["bi-flagship"]){PFILES["bi-flagship"]=SEED_PFILES["bi-flagship"].slice();try{localStorage.setItem("aiOfficeFiles",JSON.stringify(PFILES))}catch(_){}}
+else{
+  // ترقية: ملفات محفوظة من نسخة قديمة ما فيها savedAs (اسم حفظ نظيف) — نكملها من القائمة الأصلية
+  let _fixed=false;
+  PFILES["bi-flagship"].forEach(f=>{
+    if(!f.savedAs){const seed=SEED_PFILES["bi-flagship"].find(s=>s.id===f.id);f.savedAs=seed?seed.savedAs:(f.name||"file").split("(")[0].trim();_fixed=true}
+  });
+  // ترقية: استبدال النسخ القديمة بنسخ احترافية جديدة (نفس savedAs لكن id/url/name تغيّروا)
+  const savedAsList=PFILES["bi-flagship"].map(f=>f.savedAs);
+  SEED_PFILES["bi-flagship"].forEach(seed=>{
+    const idx=PFILES["bi-flagship"].findIndex(f=>f.savedAs===seed.savedAs);
+    if(idx>=0&&PFILES["bi-flagship"][idx].id!==seed.id){PFILES["bi-flagship"][idx]=Object.assign({},seed);_fixed=true}
+  });
+  if(_fixed){try{localStorage.setItem("aiOfficeFiles",JSON.stringify(PFILES))}catch(_){}toast("📎 تحدّثت ملفات المشروع الضخم لنسخ احترافية جديدة")}
+}
+function savePFiles(){try{localStorage.setItem("aiOfficeFiles",JSON.stringify(PFILES))}catch(_){}dbSetSafe("files/all",{items:PFILES,updatedAt:Date.now()});}
+const FILE_TYPE_MAP={pdf:"application/pdf",csv:"text/csv",txt:"text/plain",md:"text/markdown",json:"application/json",png:"image/png",jpg:"image/jpeg",jpeg:"image/jpeg"};
+function renderPFiles(){
+  const pid=document.getElementById("pipeProj")?document.getElementById("pipeProj").value:null;
+  const el=document.getElementById("pipeFilesList");if(!el)return;
+  const list=(pid&&PFILES[pid])||[];
+  el.innerHTML=list.length?list.map((f,i)=>'<div class="meta2" style="display:flex;justify-content:space-between;gap:8px;align-items:center;padding:4px 0;flex-wrap:wrap">'+
+    '<span>📎 '+esc(f.name)+'</span><span class="row" style="gap:4px"><button class="btn sm" data-fileopen="'+i+'">افتح</button><button class="btn sm" data-fileget="'+i+'">نزّل</button><button class="btn sm" data-filedel="'+i+'">حذف</button></span></div>').join("")
+    :'<p class="hint">ما فيه ملفات مرفوعة لهذا المشروع بعد.</p>';
+  // "افتح" يفتح الملف في تبويب جديد (قد ما يشتغل داخل تطبيق سطح المكتب، لذا فيه زر "نزّل" منفصل أكيد يشتغل)
+  el.querySelectorAll("[data-fileopen]").forEach(b=>b.onclick=()=>{const f=list[+b.dataset.fileopen];window.open(f.url,"_blank")});
+  // "نزّل" يجيب محتوى الملف فعلياً ويحفظه عندك عبر نافذة الحفظ الحقيقية (downloads) — تشتغل من المتصفح والتطبيق المكتبي
+  el.querySelectorAll("[data-fileget]").forEach(b=>b.onclick=async()=>{
+    const f=list[+b.dataset.fileget];
+    if(!window.claude||!window.claude.use){toast("التنزيل يشتغل بس من claude.ai");return}
+    try{
+      const downloads=await claude.use("downloads");
+      if(!downloads){toast("التنزيل مو متاح بهذي الصفحة");return}
+      const res=await fetch(f.url);
+      if(!res.ok)throw new Error("تعذّر جلب الملف (HTTP "+res.status+")");
+      const blob=await res.blob();
+      await downloads.save({filename:f.savedAs||f.name,data:blob});
+      toast("انحفظ الملف ✔");
+    }catch(err){toast(err&&err.code==="declined"?"ألغيت التنزيل":"ما قدر ينزّل الملف"+(err&&err.message?": "+err.message:""))}
+  });
+  el.querySelectorAll("[data-filedel]").forEach(b=>b.onclick=async()=>{
+    const i=+b.dataset.filedel;const f=list[i];
+    const assets=await getAssets();
+    if(assets){try{await assets.delete(f.id)}catch(_){}}
+    list.splice(i,1);PFILES[pid]=list;savePFiles();renderPFiles();
+  });
+}
+let _assets;
+async function getAssets(){
+  if(_assets!==undefined)return _assets;
+  if(!window.claude||!window.claude.use)return (_assets=null);
+  try{_assets=await claude.use("assets")}catch(_){_assets=null}
+  return _assets;
+}
+document.getElementById("pipeFileUpload").onclick=async()=>{
+  const pid=document.getElementById("pipeProj").value;const note=document.getElementById("pipeFileNote");
+  const inp=document.getElementById("pipeFileInput");const file=inp.files&&inp.files[0];
+  if(!pid){note.textContent="اختر مشروع أول.";return}
+  if(!file){note.textContent="اختر ملف أول.";return}
+  const assets=await getAssets();
+  if(!assets){note.textContent="رفع الملفات يشتغل بس من claude.ai.";return}
+  const ext=(file.name.split(".").pop()||"").toLowerCase();
+  const type=FILE_TYPE_MAP[ext];
+  if(!type){note.textContent="صيغة غير مدعومة. استخدم PDF/CSV/TXT/MD/JSON أو صورة.";return}
+  note.textContent="يرفع...";
+  try{
+    const r=await assets.upload(file,{type});
+    PFILES[pid]=PFILES[pid]||[];PFILES[pid].push({id:r.id,name:file.name,savedAs:file.name,url:r.url,contentType:r.contentType});
+    savePFiles();renderPFiles();inp.value="";note.textContent="انرفع ✔";
+    toast("انرفع الملف وصار جاهز يدرسه الفريق");
+  }catch(err){note.textContent=err&&err.code==="too_large"?"الملف كبير.":(err&&err.message?err.message:"ما قدر يرفع الملف.")}
+};
+
+// ===== خط سير المشروع: من استلام المشروع لين الدراسة والعرض التقديمي الكامل، عبر كل الأقسام =====
+const PIPELINE_STAGES=[
+  {id:"data",title:"جمع وتنظيف البيانات",emp:["asma","fawaz"],sec:"البيانات"},
+  {id:"analysis",title:"التحليل الاستكشافي للبيانات",emp:["dana"],sec:"التحليل"},
+  {id:"bi",title:"تصميم لوحة Power BI وذكاء الأعمال",emp:["rayan"],sec:"اللوحة وذكاء الأعمال"},
+  {id:"finance",title:"دراسة الجدوى المالية والعائد",emp:["abdullah","badr"],sec:"الجدوى المالية"},
+  {id:"risk",title:"تقييم المخاطر وإدارة الأزمات",emp:["malak","abdulaziz"],sec:"المخاطر وإدارة الأزمات"},
+  {id:"exec",title:"المراجعة التنفيذية والتوصيات",emp:["rami","muneera","omar"],sec:"التوصيات التنفيذية"},
+  {id:"deck",title:"تجميع العرض التقديمي النهائي",emp:["lama","hind"],sec:"هيكل العرض التقديمي"}
+];
+const SEED_PIPELINE_RUN={
+ "bi-flagship":{
+  data:"تم جمع بيانات 42 فرعاً من 3 مصادر (نظام نقطة البيع، إكسل الفروع، تقارير المستودع). تم توحيد تنسيق التاريخ والعملة، حذف 138 سطر مكرر، وتعبئة 22 قيمة مفقودة في عمود الفرع بالاعتماد على كود الفرع. الجدول النهائي: 8 أعمدة جاهزة للتحليل.\nتنبيه من فواز: فرعا الرياض-7 وجدة-3 لسه يرسلون بتنسيق قديم، تم فتح طلب تصحيح معهم.",
+  analysis:"أهم 5 أنماط من بيانات الفروع:\n1) 6 فروع تمثل 48% من إجمالي المبيعات.\n2) هامش الربح في فئة الأغذية الطازجة أقل من المتوسط بـ7 نقاط.\n3) المخزون الراكد يتركز في 3 فروع بالمنطقة الشرقية.\n4) موسمية واضحة: ارتفاع 22% في رمضان وموسم العودة للمدارس.\n5) 9 فروع تتجاوز هدف الهامش الشهري المحدد.\nمقارنة بالسوق: هامش الربح الإجمالي للمجموعة أعلى من متوسط القطاع بنقطتين.",
+  bi:"موديل بيانات نجمي (Star Schema): جدول حقائق Fact_Sales مرتبط بأبعاد Branch وProduct وDate وRegion.\nأهم مقاييس DAX: صافي المبيعات، هامش الربح%، النمو الشهري MoM، تصنيف الفروع ABC.\nتخطيط اللوحة (4 صفحات): نظرة عامة تنفيذية، أداء الفروع، المخزون، الاتجاهات الموسمية. الفلاتر: الفرع، المنطقة، الفترة. أهم 6 مؤشرات تظهر في الصفحة الأولى فوق الطيّ.",
+  finance:"تكلفة المشروع شبه رمزية لأنه داخلي (وقت الفريق + ترخيص Power BI). العائد المتوقع:\n- تقليص وقت التقرير الشهري من أسبوعين إلى دقائق → توفير نحو 160 ساعة عمل إدارية شهرياً.\n- تحديد الفروع الخاسرة وإعادة توجيه المخزون الراكد قد يرفع الهامش الإجمالي 1-2%.\nفترة الاسترداد: فورية تقريباً، بدون استثمار خارجي كبير.",
+  risk:"سجل المخاطر:\n- جودة بيانات الفروع (احتمال مرتفع، أثر متوسط) ← تدقيق أسبوعي + تنبيه تلقائي للفروع المتأخرة.\n- اعتماد اللوحة على مصدر بيانات واحد (احتمال متوسط، أثر مرتفع) ← نسخة احتياطية يومية للبيانات الخام.\n- تسرّب بيانات مبيعات حساسة (احتمال منخفض، أثر مرتفع) ← صلاحيات عرض فقط للفروع + تشفير الملفات المصدّرة.\n- رفض مشرفي الفروع لاستخدام اللوحة الجديدة (احتمال متوسط، أثر متوسط) ← تدريب + فترة تشغيل مزدوج شهر كامل.\n\nسيناريوهات الأزمات:\n1) توقف تحديث البيانات أكثر من 24 ساعة ← فواز يبلّغ ريان ورامي فوراً، تُستخدم آخر نسخة محفوظة.\n2) خطأ كبير في الأرقام يُكتشف بعد النشر ← سحب اللوحة فوراً، مراجعة دانة وريان، تصحيح وإعلان للإدارة خلال ساعتين.\n3) تعطل حساب Power BI ← نسخة PDF أسبوعية احتياطية تُرسل تلقائياً لكل مدير فرع.",
+  exec:"التوصيات:\n1) اعتماد اللوحة كمصدر رسمي لتقارير مجلس الإدارة الشهرية.\n2) إعادة توجيه مخزون الفروع الراكدة الثلاثة في المنطقة الشرقية خلال 30 يوماً.\n3) خطة لتحسين هامش فئة الأغذية الطازجة في الفروع الست الأعلى مبيعاً.\n4) تخصيص مسؤول بيانات في كل فرع للرد على تنبيهات فواز خلال نفس اليوم.\nالقرار: الموافقة على المرحلة الثانية (ربط باقي الفروع) بعد أسبوعين تجربة ناجحة على الفروع الحالية.",
+  deck:"هيكل العرض (10 شرائح): الغلاف ← المشكلة ← الحل والمنهجية ← نموذج البيانات ← أبرز النتائج (4 أنماط) ← لقطة من اللوحة ← الجدوى المالية ← المخاطر وخطط التخفيف ← التوصيات والخطوة التالية ← شكراً وتواصل.\nالهوية البصرية: نفس ألوان قسم تحليل البيانات (أزرق بترولي) مع رسوم بيانية مبسطة، وخط واضح يقرأ بسهولة من شاشة العرض."
+ }
+};
+let PIPE={};try{PIPE=JSON.parse(localStorage.getItem("aiOfficePipeline")||"null")||{}}catch(_){PIPE={}}
+if(!PIPE["bi-flagship"]){PIPE["bi-flagship"]=Object.assign({},SEED_PIPELINE_RUN["bi-flagship"]);try{localStorage.setItem("aiOfficePipeline",JSON.stringify(PIPE))}catch(_){}}
+function savePipe(){try{localStorage.setItem("aiOfficePipeline",JSON.stringify(PIPE))}catch(_){}dbSetSafe("pipeline/all",{items:PIPE,updatedAt:Date.now()});}
+let PIPE_BUSY=false;
+function renderPipeline(){
+  const sel=document.getElementById("pipeProj");if(!sel)return;
+  const cur=sel.value;
+  sel.innerHTML=PROJECTS.map(p=>'<option value="'+esc(p.id)+'">'+esc(p.name)+'</option>').join("");
+  if(cur&&PROJECTS.some(p=>p.id===cur))sel.value=cur;
+  const pid=sel.value;const proj=PROJECTS.find(p=>p.id===pid);
+  const run=PIPE[pid]||{};
+  renderPFiles();
+  const stEl=document.getElementById("pipeStages");
+  stEl.innerHTML=PIPELINE_STAGES.map((st,i)=>{
+    const who=st.emp.map(id=>{const e=byId(id);return e?e.name+" ("+e.role+")":id}).join("، ");
+    const out=run[st.id];
+    return '<div class="card" style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center">'+
+      '<h4 style="margin:0">'+(i+1)+'. '+esc(st.title)+'</h4><span class="dchip" style="background:'+(out?"#15803d":"#64748b")+'">'+(out?"خلصت ✔":"ما بدأت")+'</span></div>'+
+      '<div class="meta2" style="margin:4px 0">المسؤولون: '+esc(who)+'</div>'+
+      (out?'<div class="dev" style="margin-top:6px">'+esc(out).replace(/\n/g,"<br>")+'</div>':'<p class="hint">بعد ما يشتغل هالدور، بيظهر تسليمه هنا.</p>')+
+      '</div>';
+  }).join("");
+  const allDone=proj&&PIPELINE_STAGES.every(st=>run[st.id]);
+  const fin=document.getElementById("pipeFinal");
+  if(allDone){
+    fin.style.display="block";
+    fin.innerHTML='<h2>الدراسة الكاملة — '+esc(proj.name)+'</h2>'+
+      PIPELINE_STAGES.map(st=>'<h3 style="margin-top:14px">'+esc(st.sec)+'</h3><div class="dev">'+esc(run[st.id]).replace(/\n/g,"<br>")+'</div>').join("")+
+      '<div class="row" style="margin-top:12px"><button class="btn dark sm" id="pipeCopy">انسخ الدراسة كاملة</button><button class="btn sm" id="pipeDownload">نزّل الدراسة ملف (.md)</button></div>'+
+      '<p class="hint" style="margin-top:10px">عشان تطلع الدراسة بصيغة PowerPoint/Excel حقيقية (برزنتيشن فعلي، لوحة Excel بتشارتات وجداول SUMIFS، سكريبت Python وSQL) — قول لـ Claude في المحادثة "جهّز لي ملفات هذا المشروع" وبيرسلها لك كملفات حقيقية. الصفحة نفسها ما تقدر تولّد هالصيغ.</p>';
+    document.getElementById("pipeCopy").onclick=()=>copy(fullDocText(proj,run),"انسخت الدراسة كاملة");
+    document.getElementById("pipeDownload").onclick=async()=>{
+      if(!window.claude||!window.claude.use){toast("التنزيل يشتغل بس من claude.ai");return}
+      try{
+        const dl=await claude.use("downloads");
+        if(!dl){toast("التنزيل مو متاح بهذي الصفحة");return}
+        await dl.save({filename:(proj.name||"study").replace(/[\\/:*?"<>|]/g,"-")+".md",data:fullDocText(proj,run)});
+        toast("انحفظ الملف ✔");
+      }catch(err){toast(err&&err.code==="declined"?"ألغيت التنزيل":"ما قدر ينزّل الملف")}
+    };
+  }else{fin.style.display="none";fin.innerHTML="";}
+  const note=document.getElementById("pipeNote");
+  if(note)note.textContent=allDone?"":"اضغط «شغّل خط السير الآن» عشان الفريق يبدأ أو يكمل الأدوار الناقصة.";
+}
+function fullDocText(proj,run){
+  const files=(PFILES[proj.id]||[]).map(f=>"- "+f.name).join("\n");
+  return "الدراسة الكاملة — "+proj.name+"\n"+(proj.desc||"")+
+    (files?"\n\nالملفات المرفقة:\n"+files:"")+
+    "\n\n"+PIPELINE_STAGES.map(st=>st.sec+"\n"+(run[st.id]||"")).join("\n\n");
+}
+async function runPipeline(){
+  const sel=document.getElementById("pipeProj");const pid=sel.value;const proj=PROJECTS.find(p=>p.id===pid);
+  if(!proj||PIPE_BUSY)return;
+  const s=await getSample();
+  PIPE[pid]=PIPE[pid]||{};
+  if(!s&&!Object.keys(ENDPOINTS).length){
+    if(!PIPE[pid]||!Object.keys(PIPE[pid]).length){const note=document.getElementById("pipeNote");if(note)note.textContent="تشغيل خط السير مباشرة يشتغل بس من claude.ai، أو إذا ربطت منصة خارجية من تبويب «الإعدادات».";}
+    renderPipeline();return;
+  }
+  PIPE_BUSY=true;
+  const filesList=(PFILES[pid]||[]).map(f=>"- "+f.name).join("\n");
+  let context="اسم المشروع: "+proj.name+"\nوصف المشروع: "+(proj.desc||"")+"\n"+(filesList?"الملفات المرفقة من العميل (بناء اسمها فقط، ما عندك محتواها الكامل الآن):\n"+filesList+"\n":"");
+  for(const st of PIPELINE_STAGES){
+    if(PIPE[pid][st.id]){context+="\n--- تسليم مرحلة «"+st.sec+"» (سابق، للسياق فقط) ---\n"+PIPE[pid][st.id];continue}
+    const who=st.emp.map(id=>byId(id));
+    const q=who.map(e=>"أنت "+e.name+"، "+e.role+".").join(" وأنت ")+"\n\nهذا سياق المشروع وما سلّمه الفريق قبلك حتى الآن:\n"+context+
+      "\n\nمهمتك الآن («"+st.title+"»): "+(who[0]?who[0].job:"")+"\nسلّم نتيجة عملية ومباشرة لهذي المرحلة فقط، بالاعتماد على ما سبق. بالعربي، مرتب بنقاط أو جدول عند الحاجة، بدون مقدمات طويلة.";
+    try{
+      const r=await callModel(who[0],q,{modelTier:"default",cache:false});
+      PIPE[pid][st.id]=r.text||"";
+      context+="\n--- تسليم مرحلة «"+st.sec+"» ---\n"+PIPE[pid][st.id];
+      savePipe();renderPipeline();
+    }catch(err){
+      const note=document.getElementById("pipeNote");if(note)note.textContent="توقف عند مرحلة «"+st.title+"»"+(err&&err.code==="rate_limited"?": وصلت الحد المؤقت.":".");
+      break;
+    }
+  }
+  PIPE_BUSY=false;renderPipeline();
+}
+document.getElementById("pipeProj").onchange=renderPipeline;
+document.getElementById("pipeRun").onclick=runPipeline;
+document.getElementById("pipeReset").onclick=()=>{const pid=document.getElementById("pipeProj").value;if(pid){delete PIPE[pid];savePipe();renderPipeline();toast("تم تصفير خط السير لهذا المشروع")}};
+
+const DEFAULT_COMPANY="قرار تقني معتمد (من اجتماع الفريق): نبني لغة برمجة عربية جديدة اسمها «ضاد» (Dhad)، هدفها تكون أقوى وأسرع وأوضح من بايثون للمطورين العرب. فريق البرمجة (سارة كمديرة منتج، وفيصل وماجد وسعود وياسر) مسؤول عن الاستمرار في تصميمها وتطويرها كمشروع أساسي للشركة، وما ننقطع عنه حتى لو تحدّث المكتب الافتراضي أو تغيّرت أشياء ثانية — هذا القرار ثابت ومحفوظ دائماً.";
+let COMPANY="";try{COMPANY=localStorage.getItem("aiOfficeCompany")||""}catch(_){}
+if(!COMPANY.trim()){COMPANY=DEFAULT_COMPANY;try{localStorage.setItem("aiOfficeCompany",COMPANY)}catch(_){}}
+function saveCompany(){try{localStorage.setItem("aiOfficeCompany",COMPANY)}catch(_){}dbSetSafe("company/profile",{text:COMPANY,updatedAt:Date.now()});}
+function companyBlock(){return COMPANY.trim()?"## عن الشركة (معلومات ثابتة، التزم فيها)\n"+COMPANY.trim()+"\n":""}
+
+// ===== قاعدة بيانات دائمة: تحفظ شغل الشركة الحقيقي حتى لو تحدّث المكتب أو انمسح متصفحك =====
+let DB=null,DB_READY=false;
+async function dbSetSafe(path,data){
+  if(!DB)return;
+  try{await DB.doc(path).set(data);}catch(_){}
+}
+async function dbInit(){
+  try{DB=await claude.use("db");}catch(_){DB=null;}
+  if(!DB)return;
+  DB_READY=true;
+  try{
+    const d=await DB.doc("company/profile").get();
+    if(d&&d.exists&&d.data&&d.data.text&&COMPANY===DEFAULT_COMPANY){
+      COMPANY=d.data.text;try{localStorage.setItem("aiOfficeCompany",COMPANY)}catch(_){}
+      const ta=document.getElementById("companyTxt");if(ta)ta.value=COMPANY;
+    }
+  }catch(_){}
+  try{
+    if(!localStorage.getItem("aiOfficeTasks")){
+      const d=await DB.doc("tasks/all").get();
+      if(d&&d.exists&&d.data&&Array.isArray(d.data.items)&&d.data.items.length){
+        tasks=d.data.items;try{localStorage.setItem("aiOfficeTasks",JSON.stringify(tasks))}catch(_){}
+        if(typeof renderBoard==="function")renderBoard();
+      }
+    }
+  }catch(_){}
+  try{
+    if(!ARCHIVE.length){
+      const d=await DB.doc("archive/all").get();
+      if(d&&d.exists&&d.data&&Array.isArray(d.data.items)&&d.data.items.length){
+        ARCHIVE=d.data.items;try{localStorage.setItem("aiOfficeArchive",JSON.stringify(ARCHIVE))}catch(_){}
+        if(typeof renderArchive==="function")renderArchive();
+      }
+    }
+  }catch(_){}
+  if(typeof hydrateProjects==="function")hydrateProjects();
+  try{
+    const d=await DB.doc("requests/pending").get();
+    if(d&&d.exists&&d.data&&Array.isArray(d.data.items)&&d.data.items.length>REQUESTS.length){
+      REQUESTS=d.data.items;try{localStorage.setItem("aiOfficeRequests",JSON.stringify(REQUESTS))}catch(_){}
+      renderRequests();
+      if(REQUESTS.length)toast("📩 عندك "+REQUESTS.length+" طلب مشروع جديد — افتح «المشاريع الحقيقية» للموافقة");
+    }
+  }catch(_){}
+  try{
+    const d=await DB.doc("hires/all").get();
+    if(d&&d.exists&&d.data&&Array.isArray(d.data.items)&&d.data.items.length>EXTRA_HIRES.length){
+      const before=EXTRA_HIRES.length;
+      EXTRA_HIRES=d.data.items;try{localStorage.setItem("aiOfficeHires",JSON.stringify(EXTRA_HIRES))}catch(_){}
+      EXTRA_HIRES.forEach(rec=>{if(rec&&rec.emp&&rec.emp.id&&!EMP.some(e=>e.id===rec.emp.id)){EMP.push(rec.emp);DEEP[rec.emp.id]=rec.deep||{skills:[],daily:[],weekly:[],monthly:[],kpis:[]}}});
+      if(EXTRA_HIRES.length>before){rebuildFloor();toast("📥 انضم "+(EXTRA_HIRES.length-before)+" موظف جديد من جهاز ثاني")}
+    }
+  }catch(_){}
+  try{
+    if(!localStorage.getItem("aiOfficeFiles")){
+      const d=await DB.doc("files/all").get();
+      if(d&&d.exists&&d.data&&d.data.items&&Object.keys(d.data.items).length){
+        PFILES=d.data.items;try{localStorage.setItem("aiOfficeFiles",JSON.stringify(PFILES))}catch(_){}
+        if(typeof renderPFiles==="function")renderPFiles();
+      }
+    }
+  }catch(_){}
+  try{
+    if(!localStorage.getItem("aiOfficePipeline")){
+      const d=await DB.doc("pipeline/all").get();
+      if(d&&d.exists&&d.data&&d.data.items&&Object.keys(d.data.items).length){
+        PIPE=d.data.items;try{localStorage.setItem("aiOfficePipeline",JSON.stringify(PIPE))}catch(_){}
+        if(typeof renderPipeline==="function")renderPipeline();
+      }
+    }
+  }catch(_){}
+}
+dbInit();
+let LANG="sa",ENGINE=null,RATE=1;
+try{const o=JSON.parse(localStorage.getItem("aiOfficeVoice")||"{}");LANG=o.lang||"sa";ENGINE=o.engine||null;RATE=o.rate||1}catch(_){}
+function saveVoiceCfg(){try{localStorage.setItem("aiOfficeVoice",JSON.stringify({lang:LANG,engine:ENGINE,rate:RATE}))}catch(_){}}
+function STYLE(){
+  if(LANG==="en")return "## Language\nAlways reply in clear, professional business English. Keep technical terms standard.";
+  if(LANG==="fusha")return "## اللغة\nاكتب بالعربية الفصحى المهنية السهلة: جمل قصيرة وواضحة، بدون عامية، وبدون تكلّف أو كلمات قديمة. المصطلحات التقنية المتداولة تبقى بالإنجليزية (مثل ROAS وFunnel). الأسلوب محترم وواثق ومختصر، بدون إيموجي.";
+  return "## اللغة واللهجة\nتكلّم بلهجة سعودية بيضاء مهنية، مثل الكلام في بيئة عمل محترمة في الرياض:\n- مفردات معتمدة: وش، ليش، أبي، الحين، زين، تمام، كذا، عشان، خلنا، نقدر، أبشر، إن شاء الله، يعطيك العافية، على طول، مرّة (بمعنى جداً).\n- ممنوع تماماً: المصري (إزاي، كده، عايز، دلوقتي، بتاع، أوي)، والشامي (هيك، شو، بدّي، منيح)، والعراقي والمغربي.\n- لا تخلط الفصحى الرسمية الثقيلة مع العامية في نفس الجملة، ولا تستخدم كلمات سوقية.\n- المصطلحات التقنية والتسويقية المتداولة تبقى بالإنجليزي (ROAS، Funnel، CRM).\n- الأسلوب: محترم، واثق، مختصر، بدون مبالغة ولا إيموجي.";
+}
+function fullPrompt(e){
+  const D=DEEP[e.id],G=g(e);
+  let t=(companyBlock()?companyBlock()+"\n":"")+e.prompt+"\n\n## مستواك: "+lvl(e).name+"\n## مهاراتك\n"+allSkills(e).map(x=>"- "+x).join("\n")+
+   "\n\n## مهامك\nيومياً:\n"+D.daily.map(x=>"- "+x).join("\n")+"\nأسبوعياً:\n"+D.weekly.map(x=>"- "+x).join("\n")+"\nشهرياً:\n"+D.monthly.map(x=>"- "+x).join("\n")+
+   "\n\n## مؤشرات أدائك\n"+D.kpis.map(x=>"- "+x).join("\n")+"\n\n"+STANDARD;
+  t+="\n\n"+STYLE();
+  if(G.addon)t+="\n\n## تطويرات اعتمدها المدير\n"+G.addon;
+  if(G.lessons.length)t+="\n\n## دروس تعلمتها من شغلك مع المدير (التزم فيها)\n"+G.lessons.map(x=>"- "+x).join("\n");
+  return t;
+}
+
+// panel
+const panel=document.getElementById("panel");
+function esc(s){return s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+function renderIntro(){
+  panel.innerHTML='<h2>أهلاً في مكتبك</h2><p class="role" style="margin-top:6px">هذا فريقك من موظفين الذكاء الاصطناعي. كل موظف له وصف وظيفي، ومهام يومية، وتعليمات تشغيل جاهزة.</p><h3>كيف تستخدمه</h3><ul><li>اضغط على أي موظف تشوف شغله وتكلمه.</li><li>«ابدأ اجتماع» يجمع الكل في غرفة الاجتماعات.</li><li>«لوحة المهام» توزّع فيها الشغل، ورامي يتابع.</li></ul><h3>كيف يتطورون</h3><ul><li>كل رد تقيّمه بـ 👍 أو 👎 يعلّمهم.</li><li>كل 3 رسائل يستخلص الموظف دروس ويحفظها.</li><li>زر «طوّر نفسك» يخليه يراجع نفسه كخبير ويقترح مهارات أقوى تعتمدها.</li><li>نقاط الخبرة ترقّيهم: متدرّب ← موظف ← محترف ← خبير ← أسطورة.</li></ul>';
+}
+function list(a){return '<ul>'+a.map(t=>'<li>'+esc(t)+'</li>').join("")+'</ul>'}
+function select(id){
+  const e=byId(id);state.sel=id;
+  Object.entries(els).forEach(([k,el])=>el.classList.toggle("sel",k===id));
+  const T=TOOLS[e.tool],D=DEEP[e.id],G=g(e),L=lvl(e);
+  const open=e.tool==="gem"?"انسخ وافتح Gemini":"افتح في "+T.name;
+  panel.innerHTML='<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px"><div><h2>'+e.name+'</h2><div class="role">'+e.role+' · '+e.en+'</div><span class="dept">'+e.dept+'</span> <span class="dept lvl">⭐ '+L.name+'</span></div><span class="chip '+T.cls+'">'+T.name+'</span></div>'+
+   '<div class="row"><button class="btn sm" id="meetMe">'+(INMEET.has(e.id)?'رجّعه لمكتبه':'ادعه للاجتماع')+'</button></div><div class="xp"><i style="width:'+L.pct+'%"></i></div><p class="hint" style="margin-top:4px">'+G.xp+' نقطة خبرة · '+G.lessons.length+' درس محفوظ · '+(G.last?'آخر تطوير: '+G.last:'ما طوّر نفسه للحين')+'</p>'+
+   '<h3>المحادثة مع '+e.name+'</h3><div class="chat" id="chatLog"></div>'+
+   '<textarea id="ask" placeholder="اكتب لـ '+e.name+'... (Enter للإرسال)"></textarea>'+
+   '<div class="row" style="align-items:center"><button class="btn dark sm" id="chatSend">أرسل</button><button class="btn sm" id="micChat" style="'+(DICT?'':'display:none')+'">🎤 تكلّم</button><label class="chk"><input type="checkbox" id="strong"'+(STRONG[e.id]?' checked':'')+'> وضع قوي</label><label class="chk" style="'+(engine()!=="none"?'':'display:none')+'"><input type="checkbox" id="autoV"'+(AUTOV[e.id]?' checked':'')+'> رد صوتي</label><button class="btn sm" id="chatClear">مسح المحادثة</button></div>'+
+   '<p class="hint" id="chatNote">المحادثة هنا تشتغل على Claude. قيّم الردود بـ 👍 أو 👎 عشان يتعلم.</p>'+
+   '<div class="row" style="align-items:center"><select id="handoffWho">'+EMP.filter(x=>x.id!==e.id).map(x=>'<option value="'+x.id+'">'+x.name+' — '+x.role+'</option>').join("")+'</select><button class="btn sm" id="handoffBtn">سلّم آخر رد لزميل</button></div>'+
+   '<div class="tabs2"><button class="on" data-t="skills">المهارات</button><button data-t="tasks">المهام</button><button data-t="grow">التطوير</button><button data-t="more">الإعدادات</button></div>'+
+   '<div data-p="skills"><h3>المهارات</h3><div class="skills">'+allSkills(e).map((s,i)=>'<span class="sk'+(i>=D.skills.length?' new':'')+'">'+esc(s)+'</span>').join("")+'</div>'+
+     '<h3>مؤشرات الأداء</h3>'+list(D.kpis)+'<h3>الوصف الوظيفي</h3><p>'+e.job+'</p></div>'+
+   '<div data-p="tasks" style="display:none"><h3>يومياً</h3>'+list(D.daily)+'<h3>أسبوعياً</h3>'+list(D.weekly)+'<h3>شهرياً</h3>'+list(D.monthly)+
+     '<div class="row"><button class="btn sm" id="toBoard">أضف مهمة له في اللوحة</button></div></div>'+
+   '<div data-p="grow" style="display:none">'+
+     '<h3>التطوير الذاتي</h3><p class="role">'+e.name+' يبحث عن أحدث مهارات وأدوات الذكاء الاصطناعي لوظيفته في Claude وChatGPT وGemini وغيرها، وبعدها يحوّلها لتطوير تعتمده.</p>'+
+     '<p class="hint" style="margin-top:8px"><b>1. البحث في الإنترنت:</b> اختر وين يبحث (الثلاث كلها تبحث في الإنترنت).</p>'+
+     '<div class="row"><button class="btn gem sm" data-rs="gem">ابحث بـ Gemini</button><button class="btn gpt sm" data-rs="gpt">ابحث بـ ChatGPT</button><button class="btn cla sm" data-rs="cla">ابحث بـ Claude</button></div>'+
+     '<p class="hint" style="margin-top:10px"><b>2. الصق نتيجة البحث هنا:</b></p><textarea id="resIn" placeholder="الصق التقرير اللي طلع لك..."></textarea>'+
+     '<div class="row"><button class="btn dark sm" id="useRes">حوّل البحث لتطوير</button><button class="btn sm" id="selfDev">طوّر بدون بحث</button>'+(e.id==="noor"?'':'<button class="btn sm" id="trainBtn">خل نور تدرّبه</button>')+'</div>'+
+     (e.id==="noor"?'<div class="row"><button class="btn gem sm" id="trainAll">درّبي الفريق كله</button>'+["تنفيذي","موارد بشرية","مالية وشؤون إدارية","تسويق","تصميم","برمجة","تحليل البيانات","إدارة الأزمات والمخاطر"].map(d=>'<button class="btn sm" data-tdept="'+d+'">'+d+'</button>').join("")+'</div>':'')+
+     '<div id="devOut"></div>'+
+     '<h3>الدروس المحفوظة</h3>'+(G.lessons.length?'<ul class="lessons">'+G.lessons.map((l,i)=>'<li>'+esc(l)+' <button class="x" data-dl="'+i+'">✕</button></li>').join("")+'</ul>':'<p class="hint">يتعلم تلقائياً من محادثاتكم ومن تقييمك للردود.</p>')+
+     '<div class="row"><input id="newLesson" placeholder="علّمه شي بنفسك..."><button class="btn sm" id="addLesson">أضف</button></div>'+
+     (G.addon?'<h3>تطويرات معتمدة</h3><div class="prompt">'+esc(G.addon)+'</div><div class="row"><button class="btn sm" id="clrAddon">امسح التطويرات</button></div>':'')+
+   '</div>'+
+   '<div data-p="more" style="display:none"><h3>المنصة</h3><select id="toolSel">'+Object.entries(TOOLS).map(([k,t])=>'<option value="'+k+'"'+(k===e.tool?' selected':'')+'>'+t.name+(k===e.defTool?' (المقترحة)':'')+'</option>').join("")+'</select>'+
+     (e.tool===e.defTool?'<p class="hint">'+e.why+'</p>':'')+
+     '<h3>ربط حقيقي بـ '+T.name+' (اختياري)</h3>'+
+     '<p class="hint">افتراضياً كل الردود هنا تجيني أنا (Claude) تحت اسم '+T.name+'. عشان ردود '+e.name+' تصير فعلياً من '+T.name+'، تحتاج تنشر خادم وسيط صغير يحفظ مفتاح API عندك بأمان (ما ينكتب هنا أبداً) — نزّل الكود وشرح التركيب بالزر تحت. بعد ما تنشره، الصق رابطه ومفتاح الحماية الخاص فيه هنا. بدون هذا، كل شي يستمر يشتغل عادي عبر Claude.</p>'+
+     '<div class="row"><input id="epUrl" placeholder="https://your-worker.your-name.workers.dev" value="'+esc((ENDPOINTS[e.tool]&&ENDPOINTS[e.tool].url)||"")+'" style="flex:1"></div>'+
+     '<div class="row"><input id="epKey" placeholder="مفتاح الحماية (X-Office-Key)" value="'+esc((ENDPOINTS[e.tool]&&ENDPOINTS[e.tool].key)||"")+'" style="flex:1"><button class="btn sm" id="epSave">احفظ</button><button class="btn sm" id="epTest">اختبر</button></div>'+
+     '<div class="row"><button class="btn sm" id="epDl">⬇️ نزّل كود الخادم + شرح التركيب</button></div>'+
+     '<p class="hint" id="epStatus">'+((ENDPOINTS[e.tool]&&ENDPOINTS[e.tool].url)?'✅ مربوط — الردود تتحاول تجي من خادمك أول، وترجع لـ Claude تلقائياً لو ما رد الخادم.':'⬜ غير مربوط — الردود تجي من Claude حالياً.')+'</p>'+
+     '<h3>أرسله لمنصته</h3><div class="row"><button class="btn '+T.cls+' sm" id="sendBtn">'+open+'</button><button class="btn sm" id="copyP">انسخ التعليمات الكاملة</button><button class="btn sm" id="callBtn">ناده لمكتبي</button></div>'+
+     '<h3>التعليمات الأساسية</h3><textarea id="promptEd" style="min-height:120px">'+esc(e.prompt)+'</textarea>'+
+     '<div class="row"><button class="btn dark sm" id="savePrompt">احفظ</button></div><p class="hint">'+(e.trained?'آخر تحديث: '+e.trained+'. ':'')+'المهارات والمهام والدروس تنضاف تلقائياً فوق هذي التعليمات.</p></div>';
+  const $=i=>document.getElementById(i);
+  panel.querySelectorAll(".tabs2 button").forEach(b=>b.onclick=()=>{TAB=b.dataset.t;panel.querySelectorAll(".tabs2 button").forEach(x=>x.classList.toggle("on",x===b));panel.querySelectorAll("[data-p]").forEach(p=>p.style.display=p.dataset.p===TAB?"":"none")});
+  const tb0=panel.querySelector('.tabs2 [data-t="'+TAB+'"]');if(tb0)tb0.click();
+  renderChat(e);
+  $("chatSend").onclick=()=>chat(e);
+  $("ask").addEventListener("keydown",ev=>{if(ev.key==="Enter"&&!ev.shiftKey){ev.preventDefault();chat(e)}});
+  $("strong").onchange=ev=>{STRONG[e.id]=ev.target.checked};
+  $("autoV").onchange=ev=>{AUTOV[e.id]=ev.target.checked};
+  $("micChat").onclick=ev=>micClick(ev.currentTarget,$("ask"));
+  $("chatClear").onclick=()=>{CHATS[e.id]=[];saveChats();renderChat(e)};
+  $("handoffBtn").onclick=()=>handoff(e,$("handoffWho").value);
+  $("toBoard").onclick=()=>{showView("board");$("tWho").value=e.id;$("tTitle").focus()};
+  $("meetMe").onclick=()=>toggleMeet(e.id);
+  $("selfDev").onclick=()=>selfDev(e,"");
+  panel.querySelectorAll("[data-rs]").forEach(b=>b.onclick=()=>{sendTo(b.dataset.rs,researchPrompt(e));say(e.id,"أبحث عن أحدث المهارات...")});
+  $("useRes").onclick=()=>{const v=$("resIn").value.trim();if(!v){toast("الصق نتيجة البحث أول");return}selfDev(e,v)};
+  $("addLesson").onclick=()=>{const v=$("newLesson").value.trim();if(!v)return;G.lessons.push(v);saveGrow();addXp(e,5);select(e.id)};
+  panel.querySelectorAll("[data-dl]").forEach(b=>b.onclick=()=>{G.lessons.splice(+b.dataset.dl,1);saveGrow();select(e.id)});
+  if($("clrAddon"))$("clrAddon").onclick=()=>{G.addon="";G.skills=[];saveGrow();select(e.id)};
+  $("sendBtn").onclick=()=>{sendTo(e.tool,fullPrompt(e));say(e.id,"جاهز، وش المطلوب؟")};
+  if($("epSave"))$("epSave").onclick=()=>{const v=$("epUrl").value.trim();const k=$("epKey").value.trim();if(v)ENDPOINTS[e.tool]={url:v,key:k};else delete ENDPOINTS[e.tool];saveEndpoints();select(e.id)};
+  if($("epTest"))$("epTest").onclick=async()=>{const st=$("epStatus");const v=$("epUrl").value.trim();const k=$("epKey").value.trim();if(!v){st.textContent="الصق رابط الخادم أول";return}ENDPOINTS[e.tool]={url:v,key:k};saveEndpoints();st.textContent="⏳ يتم الاختبار...";try{const r=await callModel(e,[{role:"user",content:"قل بالعربي: تم الاتصال بنجاح، وسمّ نفسك (أي نموذج أنت)."}],{modelTier:"quick",cache:false});st.textContent="✅ رد الخادم: "+(r.text||"").slice(0,200)}catch(err){st.textContent="❌ فشل الاختبار: "+(err&&err.message?err.message:"تأكد من الرابط وإن الخادم شغّال")}};
+  if($("epDl"))$("epDl").onclick=async()=>{
+    if(!window.claude||!window.claude.use){toast("التنزيل يشتغل بس من claude.ai");return}
+    try{
+      const dl=await claude.use("downloads");
+      if(!dl){toast("التنزيل مو متاح بهذي الصفحة");return}
+      await dl.save({filename:"ai_office_model_proxy_worker.js",data:WORKER_CODE});
+      toast("انحفظ ملف الخادم ✔ — اقرأ الشرح جوه أول سطور الملف");
+    }catch(err){toast(err&&err.code==="declined"?"ألغيت التنزيل":"ما قدر ينزّل الملف")}
+  };
+  $("copyP").onclick=()=>copy(fullPrompt(e),"انسخت تعليمات "+e.name+" الكاملة");
+  $("toolSel").onchange=ev=>{e.tool=ev.target.value;TOOLSEL[e.id]=e.tool;try{localStorage.setItem("aiOfficeTools",JSON.stringify(TOOLSEL))}catch(_){}els[e.id].querySelector(".tool").style.background=TOOLS[e.tool].color;toast(e.name+" صار يشتغل على "+TOOLS[e.tool].name);select(e.id);renderBoard();};
+  if($("trainBtn"))$("trainBtn").onclick=()=>{sendTo("gem",trainPrompt([e]));say("noor","جاية أدرّب "+e.name);};
+  if($("trainAll"))$("trainAll").onclick=()=>{sendTo("gem",trainPrompt(EMP.filter(x=>x.id!=="noor")));say("noor","تدريب للفريق كله");};
+  panel.querySelectorAll("[data-tdept]").forEach(b=>b.onclick=()=>{sendTo("gem",trainPrompt(EMP.filter(x=>x.dept===b.dataset.tdept&&x.id!=="noor")));say("noor","تدريب قسم "+b.dataset.tdept);});
+  $("savePrompt").onclick=()=>{const v=$("promptEd").value.trim();if(!v)return;e.prompt=v;e.trained=new Date().toLocaleDateString("ar-SA");SAVED[e.id]={p:v,d:e.trained};savePrompts();toast("انحفظت تعليمات "+e.name);addXp(e,10);select(e.id);};
+  $("callBtn").onclick=()=>{if(state.meeting)return;const t=place(e.id,[60,92]);setTimeout(()=>say(e.id,"نعم؟ تأمرني"),t);setTimeout(()=>{if(!state.meeting)place(e.id,e.home)},t+4500)};
+}
+let TAB="skills";
+floor.addEventListener("click",()=>{state.sel=null;Object.values(els).forEach(el=>el.classList.remove("sel"));renderIntro()});
+renderIntro();
+
+const URLS={gpt:q=>"https://chatgpt.com/?q="+encodeURIComponent(q),cla:q=>"https://claude.ai/new?q="+encodeURIComponent(q),gem:()=>"https://gemini.google.com/app"};
+function openLink(u){const a=document.createElement("a");a.href=u;a.target="_blank";a.rel="noopener";document.body.appendChild(a);a.click();a.remove();}
+function sendTo(tool,text){
+  if(tool==="gem"){copy(text,"انسخ الطلب، الصقه في Gemini");}
+  openLink(URLS[tool](text));
+}
+function copy(text,msg){
+  const done=()=>toast(msg);
+  try{navigator.clipboard.writeText(text).then(done,()=>fallback())}catch(e){fallback()}
+  function fallback(){const t=document.createElement("textarea");t.value=text;document.body.appendChild(t);t.select();try{document.execCommand("copy");done()}catch(e){toast("ما قدرت أنسخ، انسخ التعليمات يدوياً")}t.remove();}
+}
+function toast(m){const t=document.getElementById("toast");t.textContent=m;t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("show"),3200)}
+
+// meeting
+const meetBtn=document.getElementById("meetBtn"),backBtn=document.getElementById("backBtn"),meetCard=document.getElementById("meetCard");
+const INMEET=new Set();
+function seatFor(id){return MEET[EMP.findIndex(e=>e.id===id)]}
+function renderPeople(){document.getElementById("mPeople").innerHTML=EMP.map(e=>'<span class="sk pick'+(INMEET.has(e.id)?' on':'')+'" data-pp="'+e.id+'">'+e.name+'</span>').join("");
+  document.querySelectorAll("[data-pp]").forEach(c=>c.onclick=()=>toggleMeet(c.dataset.pp))}
+function openMeeting(){
+  if(!state.meeting){floor.classList.add("meeting");state.meeting=true;meetBtn.style.display="none";backBtn.style.display="";meetCard.style.display="";showView("office");}
+  renderPeople();
+}
+function invite(id,delay){INMEET.add(id);setTimeout(()=>{if(INMEET.has(id))place(id,seatFor(id))},delay||0)}
+function dismiss(id){INMEET.delete(id);place(id,byId(id).home)}
+function toggleMeet(id){openMeeting();if(INMEET.has(id)){dismiss(id);say(id,"رجعت لمكتبي")}else{invite(id);say(id,"جاي للاجتماع")}renderPeople();if(state.sel===id)select(id)}
+meetBtn.onclick=()=>{
+  openMeeting();EMP.forEach((e,i)=>invite(e.id,i*60));renderPeople();
+  setTimeout(()=>say("rami","يا جماعة، نبدأ الاجتماع",4000),1500);
+  meetCard.scrollIntoView({behavior:"smooth",block:"nearest"});
+};
+backBtn.onclick=()=>{
+  stopAll();
+  floor.classList.remove("meeting");state.meeting=false;meetBtn.style.display="";backBtn.style.display="none";meetCard.style.display="none";
+  INMEET.clear();EMP.forEach((e,i)=>setTimeout(()=>place(e.id,e.home),i*60));
+  say("rami","شكراً للجميع، نشوفكم بعدين",3500);
+};
+document.getElementById("endMeetBtn").onclick=()=>backBtn.onclick();
+document.getElementById("mAll").onclick=()=>{EMP.forEach((e,i)=>invite(e.id,i*60));renderPeople();if(state.sel)select(state.sel)};
+document.getElementById("mNone").onclick=()=>{[...INMEET].forEach(dismiss);renderPeople();if(state.sel)select(state.sel)};
+function meetPrompt(){
+  const topic=document.getElementById("meetTopic").value.trim()||"مراجعة أداء الأسبوع وخطة الأسبوع الجاي";
+  const ppl=EMP.filter(e=>INMEET.has(e.id));const team=(ppl.length?ppl:EMP).map(e=>"- "+e.name+" ("+e.role+"): مهاراته "+allSkills(e).slice(0,4).join("، ")).join("\n");
+  return "أدِر اجتماع فريق بين موظفين ذكاء اصطناعي في شركتي. الحضور:\n"+team+"\n\nموضوع الاجتماع: "+topic+"\n\nخل رامي (المدير العام) يدير النقاش حتى لو مو من الحضور، وكل موظف يتكلم من زاوية تخصصه بنقطة أو نقطتين فقط. في النهاية اكتب: القرارات، وجدول مهام (المهمة، المسؤول، الموعد). بالعربي.";
+}
+document.querySelectorAll("[data-meet]").forEach(b=>b.onclick=()=>sendTo(b.dataset.meet,meetPrompt()));
+// ===== الصوت: اجتماعات صوتية ومايك =====
+let TTS=null,DICT=null,dictTarget=null,dictBtn=null,VOICE_ON=true;
+const FEM=["laila","noor","sara","hind","reem","lama","muneera","salma","noura","jood","dana","asma","malak"];
+function voiceOf(id){const f=FEM.includes(id);const grp=EMP.filter(e=>FEM.includes(e.id)===f);const i=Math.max(0,grp.findIndex(e=>e.id===id));return (f?["airy","glassy"]:["buttery","rounded"])[i%2]}
+if(window.claude&&window.claude.use){
+  window.claude.use("tts").then(t=>{TTS=t;if(!t)return;
+    t.onLine(({id})=>{if(id&&id.indexOf("m")===0){const i=+id.slice(1);const l=MEETLOG[i];if(l){say(l.id,l.text.length>60?l.text.slice(0,58)+"…":l.text,6000);hiLine(i)}}});
+    t.onState(({state:st})=>{const b=document.getElementById("stopVoice");if(b)b.style.display=st==="idle"?"none":""});
+    refreshVoiceUI()},()=>{});
+  window.claude.use("dictation").then(d=>{DICT=d;if(!d)return;
+    let base="";
+    d.onPartial(({text})=>{if(dictTarget)dictTarget.value=base+text});
+    d.onFinal(({text})=>{if(dictTarget){base=base+text+" ";dictTarget.value=base}});
+    d.onState(({state:st})=>{if(st==="listening"&&dictTarget)base=dictTarget.value?dictTarget.value+" ":"";if(dictBtn){dictBtn.classList.toggle("rec",st==="listening");dictBtn.textContent=st==="listening"?"⏺ أسمعك... اضغط للإيقاف":"🎤 تكلّم"}});
+    document.querySelectorAll(".needMic").forEach(x=>x.style.display="")},()=>{});
+}
+function micClick(btn,target){
+  if(!DICT)return;
+  if(btn.classList.contains("rec")){DICT.stop().catch(()=>{});return}
+  dictTarget=target;dictBtn=btn;
+  DICT.start().catch(err=>{if(err&&err.code==="not_granted"){toast("ما انعطى إذن المايك، تقدر تكتب");document.querySelectorAll(".needMic").forEach(x=>x.style.display="none")}});
+}
+function speakOne(id,text){if(engine()==="device"){devSpeak([{id,text,say:text,i:-1}]);return}if(!TTS)return;TTS.speak(text.slice(0,2000),{voice:voiceOf(id),language:LANG==="en"?"en":"ar",rate:RATE}).catch(()=>{})}
+function SAYRULE(){return LANG==="en"?"":"\n\nحقل say: نفس كلام text بالضبط لكن مجهّز لمحرك النطق: شكّل الكلمات اللي ممكن تنقرأ غلط (خصوصاً كلمات اللهجة)، اكتب الأرقام والنسب بالحروف، واكتب المصطلحات الإنجليزية بحروف عربية كما تُنطق (مثل: رُواس، فَنَل، سي آر إم)."}
+// ===== أصوات الجهاز (عربية أصلية) =====
+const HAS_SYN=("speechSynthesis" in window);let DEV_VOICES=[];
+const MALE_V=/hamed|maged|majed|naayf|naif|fahed|shakir|tarik|tarek|omar|hamdan|bassel|male/i,FEM_V=/zariyah|laila|hoda|mona|salma|amina|fatima|zeina|amany|sana|female|google/i;
+function loadVoices(){if(!HAS_SYN)return;const want=LANG==="en"?/^en/i:/^ar/i;DEV_VOICES=speechSynthesis.getVoices().filter(v=>want.test(v.lang)).sort((a,b)=>(/SA/i.test(b.lang)?1:0)-(/SA/i.test(a.lang)?1:0));refreshVoiceUI()}
+if(HAS_SYN){loadVoices();try{speechSynthesis.addEventListener("voiceschanged",loadVoices)}catch(_){speechSynthesis.onvoiceschanged=loadVoices}}
+function engine(){if(ENGINE==="device"&&DEV_VOICES.length)return "device";if(ENGINE==="claude"&&TTS)return "claude";return DEV_VOICES.length&&LANG!=="en"?"device":(TTS?"claude":(DEV_VOICES.length?"device":"none"))}
+function devVoiceFor(id){
+  const fem=FEM.includes(id);const pool=DEV_VOICES.filter(v=>fem?FEM_V.test(v.name)&&!MALE_V.test(v.name):MALE_V.test(v.name));
+  const list=pool.length?pool:DEV_VOICES;const i=Math.max(0,EMP.findIndex(e=>e.id===id));
+  return {v:list[i%list.length],pitch:pool.length?1+((i%3)-1)*.06:(fem?1.18:.86)+((i%3)-1)*.05};
+}
+function devSpeak(L){
+  if(!DEV_VOICES.length)return;speechSynthesis.cancel();
+  const sb=document.getElementById("stopVoice");
+  L.forEach((l,k)=>{const u=new SpeechSynthesisUtterance(l.say||l.text);const d=devVoiceFor(l.id);try{u.voice=d.v}catch(_){}u.lang=d.v.lang;u.pitch=d.pitch;u.rate=RATE;
+    u.onstart=()=>{if(sb)sb.style.display="";if(l.i>=0){say(l.id,l.text.length>60?l.text.slice(0,58)+"…":l.text,6000);hiLine(l.i)}};
+    u.onend=()=>{if(k===L.length-1&&sb)sb.style.display="none"};speechSynthesis.speak(u)});
+}
+function stopAll(){try{if(HAS_SYN)speechSynthesis.cancel()}catch(_){}if(TTS)TTS.stop();const sb=document.getElementById("stopVoice");if(sb)sb.style.display="none"}
+function refreshVoiceUI(){
+  const sel=document.getElementById("engSel");if(!sel)return;
+  const opts=[];if(DEV_VOICES.length)opts.push(["device","صوت "+(LANG==="en"?"إنجليزي":"عربي")+" أصلي من جهازك ("+DEV_VOICES.length+")"]);if(TTS)opts.push(["claude","أصوات Claude"]);
+  sel.innerHTML=opts.length?opts.map(o=>'<option value="'+o[0]+'"'+(engine()===o[0]?' selected':'')+'>'+o[1]+'</option>').join(""):'<option>ما فيه صوت متاح هنا</option>';
+  const info=document.getElementById("voiceInfo");
+  if(info)info.textContent=engine()==="device"?"الصوت المستخدم: "+DEV_VOICES.map(v=>v.name).slice(0,4).join("، ")+". الأصوات العربية الأصلية تنطق أوضح بكثير."
+    :(LANG!=="en"&&!DEV_VOICES.length?"جهازك ما فيه صوت عربي. ثبّت صوت عربي (السعودية) من إعدادات اللغة والكلام في Windows أو Mac، وبيطلع هنا تلقائياً.":"");
+  document.querySelectorAll(".needTts").forEach(x=>x.style.display=engine()==="none"?"none":"");
+}
+
+// ===== الاجتماع =====
+let MEETLOG=[],MEETBUSY=false;
+function hiLine(i){document.querySelectorAll("#meetOut .ml").forEach(r=>r.classList.toggle("now",+r.dataset.i===i));const r=document.querySelector('#meetOut .ml[data-i="'+i+'"]');if(r)r.scrollIntoView({block:"nearest",behavior:"smooth"})}
+function renderMeet(extra){
+  const out=document.getElementById("meetOut");out.style.display="";
+  out.innerHTML=MEETLOG.map((l,i)=>{const e=l.id==="me"?null:byId(l.id);return '<div class="ml" data-i="'+i+'"><b style="color:'+(e?e.shirt:"#1f2328")+'">'+(e?e.name:"أنت")+':</b> '+esc(l.text)+'</div>'}).join("")+(extra||"");
+  out.scrollTop=out.scrollHeight;
+  document.getElementById("meetLive").style.display=MEETLOG.length?"":"none";
+}
+function meetCtx(){
+  const ppl=EMP.filter(e=>INMEET.has(e.id));const list=(ppl.length?ppl:EMP);
+  if(!list.find(e=>e.id==="rami"))list.unshift(byId("rami"));
+  return {list,txt:list.map(e=>"- "+e.id+" = "+e.name+" ("+e.role+")، مهاراته: "+allSkills(e).slice(0,4).join("، ")+(g(e).lessons.length?"، يعرف إن: "+g(e).lessons.slice(-3).join("؛ "):"")).join("\n")};
+}
+async function meetRound(mode,interject){
+  if(MEETBUSY)return;
+  const s=await getSample();
+  if(!s){renderMeet('<p class="msg err">الاجتماع داخل الصفحة يشتغل بس من claude.ai. استخدم أزرار ChatGPT أو Gemini.</p>');return}
+  const topic=document.getElementById("meetTopic").value.trim()||"مراجعة أداء الأسبوع وخطة الأسبوع الجاي";
+  const C=meetCtx();
+  if(mode==="start")MEETLOG=[];
+  if(interject)MEETLOG.push({id:"me",text:interject});
+  MEETBUSY=true;renderMeet('<p class="hint">'+(mode==="close"?"رامي يكتب القرارات...":"الفريق يتناقش...")+'</p>');
+  say("rami",mode==="close"?"نختم الاجتماع":"يلا نبدأ",3000);
+  const transcript=MEETLOG.map(l=>(l.id==="me"?"صاحب الشركة":byId(l.id).name)+": "+l.text).join("\n");
+  const ids=C.list.map(e=>e.id).join("، ");
+  let q=(companyBlock()?companyBlock()+"\n":"")+"أنت تكتب حوار اجتماع صوتي حقيقي بين موظفين ذكاء اصطناعي في شركة سعودية، بحضور صاحب الشركة.\nالحضور (المعرّف = الاسم):\n"+C.txt+"\n\nموضوع الاجتماع: "+topic+"\n\n"+(transcript?"اللي صار في الاجتماع للحين:\n"+transcript+"\n\n":"");
+  if(mode==="close"){
+    q+="الحين رامي يختم الاجتماع. أرجع JSON فقط:\n{\"lines\":[{\"id\":\"rami\",\"text\":\"ملخص ختامي قصير يُقال بصوت\",\"say\":\"نفس النص للنطق\"}],\"decisions\":[\"قرار\"],\"tasks\":[{\"title\":\"مهمة واضحة\",\"owner\":\"معرّف الموظف من: "+ids+"\"}]}\n\n"+STYLE()+SAYRULE();
+  }else{
+    q+=(interject?"صاحب الشركة تدخّل وقال: «"+interject+"». الفريق يرد عليه مباشرة ويكمل النقاش على ضوء كلامه.\n":"رامي يفتتح الاجتماع ويعطي الكلمة للمعنيين.\n")+
+      "اكتب الجزء الجاي من الحوار: من 5 إلى 8 مداخلات. كل مداخلة جملة أو جملتين كأنها كلام منطوق في اجتماع حقيقي (بدون رموز أو نقاط أو جداول). كل موظف يتكلم من تخصصه بأفكار عملية ومحددة، ويتفاعلون مع بعض (يوافق، يعترض، يكمل). آخر مداخلة لرامي يلخص أو يسأل صاحب الشركة سؤال يحتاج قراره.\nأرجع JSON فقط:\n{\"lines\":[{\"id\":\"معرّف من: "+ids+"\",\"text\":\"النص المعروض\",\"say\":\"نفس النص للنطق\"}]}\n\n"+STYLE()+SAYRULE();
+  }
+  try{
+    const r=await s(q,{modelTier:"default",cache:false});
+    const m=(r.text||"").match(/\{[\s\S]*\}/);const j=JSON.parse(m[0]);
+    const valid=new Set(C.list.map(e=>e.id));
+    const lines=(j.lines||[]).filter(l=>l&&valid.has(l.id)&&typeof l.text==="string"&&l.text.trim());
+    const start=MEETLOG.length;lines.forEach(l=>MEETLOG.push({id:l.id,text:l.text.trim(),say:typeof l.say==="string"&&l.say.trim()?l.say.trim():l.text.trim()}));
+    let extra="";
+    if(mode==="close"){
+      const T=(j.tasks||[]).filter(t=>t&&t.title&&valid.has(t.owner));
+      extra='<div class="dev"><b>القرارات:</b><ul>'+(j.decisions||[]).map(d=>'<li>'+esc(String(d))+'</li>').join("")+'</ul><b>المهام:</b><ul>'+T.map(t=>'<li>'+esc(t.title)+' — '+byId(t.owner).name+'</li>').join("")+'</ul>'+(T.length?'<div class="row"><button class="btn dark sm" id="toBoardAll">أضف المهام للوحة</button></div>':'')+'</div>';
+      window._meetTasks=T;
+      ARCHIVE.unshift({topic:document.getElementById("meetTopic").value.trim()||"اجتماع الفريق",date:new Date().toLocaleString("ar-SA"),attendees:C.list.map(e=>e.name),decisions:(j.decisions||[]).map(String),tasks:T.map(t=>({title:t.title,owner:byId(t.owner).name})),log:MEETLOG.map(l=>({who:l.id==="me"?"أنت":byId(l.id).name,text:l.text}))});
+      if(ARCHIVE.length>40)ARCHIVE.length=40;saveArchive();
+    }
+    MEETBUSY=false;renderMeet(extra);
+    const tb=document.getElementById("toBoardAll");if(tb)tb.onclick=()=>{window._meetTasks.forEach(t=>tasks.push({title:t.title,who:t.owner,s:0}));save();renderBoard();tb.disabled=true;tb.textContent="انضافت ✔";toast("رامي: وزّعت "+window._meetTasks.length+" مهام على الفريق")};
+    try{play(lines,start)}catch(_){}
+  }catch(err){MEETBUSY=false;renderMeet('<p class="msg err">'+(err&&err.code==="rate_limited"?"وصلت الحد المؤقت، جرّب بعد شوي.":"ما قدرت أكمل الاجتماع، جرّب مرة ثانية.")+'</p>')}
+}
+function play(lines,start){
+  const L=lines.map((l,k)=>({id:l.id,text:l.text,say:(typeof l.say==="string"&&l.say.trim())?l.say:l.text,i:start+k}));
+  if(VOICE_ON&&engine()==="device"){devSpeak(L);return}
+  if(TTS&&VOICE_ON){
+    TTS.speak(L.map(l=>({text:l.say.slice(0,2000),voice:voiceOf(l.id),language:LANG==="en"?"en":"ar",rate:RATE,id:"m"+l.i}))).catch(()=>{});
+  }else{
+    lines.forEach((l,k)=>setTimeout(()=>{say(l.id,l.text.length>60?l.text.slice(0,58)+"…":l.text,3800);hiLine(start+k)},k*3500));
+  }
+}
+document.getElementById("meetHere").onclick=()=>meetRound("start");
+document.getElementById("meetSend").onclick=()=>{const v=document.getElementById("meetReply").value.trim();if(!v)return;document.getElementById("meetReply").value="";stopAll();meetRound("reply",v)};
+document.getElementById("meetGo").onclick=()=>{stopAll();meetRound("reply","كملوا النقاش")};
+document.getElementById("meetClose").onclick=()=>{stopAll();meetRound("close")};
+document.getElementById("stopVoice").onclick=stopAll;
+const langSel=document.getElementById("langSel");langSel.value=LANG;
+langSel.onchange=()=>{LANG=langSel.value;saveVoiceCfg();loadVoices();toast(LANG==="sa"?"الفريق يتكلم الحين لهجة سعودية مهنية":LANG==="fusha"?"الفريق يتكلم الحين فصحى مهنية":"The team now speaks English")};
+document.getElementById("engSel").onchange=ev=>{ENGINE=ev.target.value;saveVoiceCfg();refreshVoiceUI()};
+const rateIn=document.getElementById("rateIn");rateIn.value=RATE;rateIn.oninput=()=>{RATE=+rateIn.value;saveVoiceCfg()};
+document.getElementById("testVoice").onclick=()=>{const t=LANG==="en"?"Hi, I'm Rami, the general manager. The team is ready.":LANG==="fusha"?"مرحباً، أنا رامي، المدير العام. الفريق جاهز للعمل.":"هلا والله، أنا رامي المدير العام. الفريق جاهز، وش نبدأ فيه اليوم؟";const t2=LANG==="en"?"And I'm Laila from HR.":LANG==="fusha"?"وأنا ليلى من الموارد البشرية.":"وأنا ليلى من الموارد البشرية، أبشر باللي تبيه.";
+  if(engine()==="device")devSpeak([{id:"rami",text:t,say:t,i:-1},{id:"laila",text:t2,say:t2,i:-1}]);else if(TTS)TTS.speak([{text:t,voice:voiceOf("rami"),language:LANG==="en"?"en":"ar",rate:RATE},{text:t2,voice:voiceOf("laila"),language:LANG==="en"?"en":"ar",rate:RATE}]).catch(()=>{});else toast("ما فيه صوت متاح في هذا المتصفح")};
+document.getElementById("voiceOn").onchange=ev=>{VOICE_ON=ev.target.checked;if(!VOICE_ON)stopAll()};
+document.getElementById("micTopic").onclick=ev=>micClick(ev.currentTarget,document.getElementById("meetTopic"));
+document.getElementById("micReply").onclick=ev=>micClick(ev.currentTarget,document.getElementById("meetReply"));
+
+// ===== المحادثة داخل الصفحة (Claude) =====
+let CHATS={};try{CHATS=JSON.parse(localStorage.getItem("aiOfficeChats")||"{}")||{}}catch(e){}
+const STRONG={},AUTOV={};const BUSY={};
+function saveChats(){try{localStorage.setItem("aiOfficeChats",JSON.stringify(CHATS))}catch(e){}}
+let _sample;
+function getSample(){
+  if(_sample!==undefined)return Promise.resolve(_sample);
+  if(!window.claude||!window.claude.use)return Promise.resolve(_sample=null);
+  return window.claude.use("sample").then(s=>(_sample=s),()=>(_sample=null));
+}
+// ===== ربط حقيقي بمنصات خارجية (ChatGPT/Gemini) عبر خادم وسيط يملكه صاحب المكتب =====
+// المفاتيح السرية (API keys) ما تنحط هنا أبداً — تنحفظ عند صاحب الحساب في خادمه الخاص (Worker)،
+// وهذي الصفحة بس ترسل له الرسائل وتستلم الرد. لو ما فيه رابط خادم محفوظ لهذي المنصة، يرجع تلقائياً لـ Claude.
+let ENDPOINTS={};try{ENDPOINTS=JSON.parse(localStorage.getItem("aiOfficeEndpoints")||"{}")||{}}catch(_){ENDPOINTS={}}
+function saveEndpoints(){try{localStorage.setItem("aiOfficeEndpoints",JSON.stringify(ENDPOINTS))}catch(_){}}
+const WORKER_CODE=[
+"// ====================================================================",
+"// خادم وسيط آمن لربط \"المكتب الافتراضي\" بـ ChatGPT و Gemini الحقيقيين",
+"// ====================================================================",
+"// ليش تحتاج هذا الملف؟",
+"// الصفحة (office.html) ما تقدر تخزن مفاتيح OpenAI/Gemini بأمان لأنها كود يشوفه",
+"// أي أحد يفتح مصدر الصفحة. الحل: تنشر هذا الملف كخادم صغير مجاني على",
+"// Cloudflare Workers، تحط مفاتيحك الحقيقية (Secrets) في لوحة Cloudflare",
+"// (مو بالكود)، والصفحة بس ترسل له الرسائل وتستلم الرد.",
+"//",
+"// خطوات التركيب (كلها مجانية، ما تحتاج بطاقة ائتمان للمستوى المجاني):",
+"// 1) سوّ حساب مجاني في https://dash.cloudflare.com",
+"// 2) من القائمة اليسار: Workers & Pages > Create > Create Worker",
+"//    عطه اسم مثل: ai-office-proxy  ثم Deploy (أول نسخة فاضية)",
+"// 3) اضغط Edit code، امسح كل الكود الموجود، والصق هذا الملف كامل، ثم Save and Deploy",
+"// 4) من صفحة الـ Worker: Settings > Variables > Secrets (Environment Variables)",
+"//    أضف:",
+"//      OPENAI_API_KEY    = مفتاحك من platform.openai.com",
+"//      GEMINI_API_KEY    = مفتاحك من aistudio.google.com/apikey",
+"//      OFFICE_SHARED_KEY = أي كلمة سر تختارها انت (مثلاً: 7k2-xxxx) — هذي تمنع",
+"//                          أي شخص ثاني على الإنترنت من استخدام خادمك ومفاتيحك.",
+"// 5) انسخ رابط الـ Worker (يطلع فوق، شكله https://ai-office-proxy.YOUR-NAME.workers.dev)",
+"// 6) في المكتب الافتراضي: افتح أي موظف شغال على ChatGPT أو Gemini > تبويب",
+"//    «الإعدادات» > الصق الرابط في خانة الرابط، ونفس OFFICE_SHARED_KEY في خانة",
+"//    مفتاح الحماية > احفظ > اختبر.",
+"//",
+"// بعد هذا، كل رد لهذا الموظف يروح فعلياً لـ ChatGPT أو Gemini الحقيقي، ويرجع",
+"// لـ Claude تلقائياً بس لو الخادم ما رد (مثلاً نفد رصيدك أو وقف الخادم).",
+"// ====================================================================",
+"",
+"const ALLOWED_ORIGIN = \"*\"; // لو تبي تقيّدها لاحقاً، غيّرها لعنوان صفحتك بالضبط",
+"",
+"function corsHeaders() {",
+"  return {",
+"    \"Access-Control-Allow-Origin\": ALLOWED_ORIGIN,",
+"    \"Access-Control-Allow-Methods\": \"POST, OPTIONS\",",
+"    \"Access-Control-Allow-Headers\": \"Content-Type, X-Office-Key\"",
+"  };",
+"}",
+"",
+"async function callOpenAI(env, messages, modelTier) {",
+"  const model = modelTier === \"complex\" ? \"gpt-4o\" : \"gpt-4o-mini\";",
+"  const res = await fetch(\"https://api.openai.com/v1/chat/completions\", {",
+"    method: \"POST\",",
+"    headers: {",
+"      \"Content-Type\": \"application/json\",",
+"      \"Authorization\": \"Bearer \" + env.OPENAI_API_KEY",
+"    },",
+"    body: JSON.stringify({ model: model, messages: messages })",
+"  });",
+"  if (!res.ok) {",
+"    const errText = await res.text();",
+"    throw new Error(\"OpenAI error \" + res.status + \": \" + errText.slice(0, 300));",
+"  }",
+"  const data = await res.json();",
+"  return (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) || \"\";",
+"}",
+"",
+"async function callGemini(env, messages, modelTier) {",
+"  const model = modelTier === \"complex\" ? \"gemini-1.5-pro\" : \"gemini-1.5-flash\";",
+"  const contents = messages.map(function (m) {",
+"    return { role: m.role === \"assistant\" ? \"model\" : \"user\", parts: [{ text: m.content }] };",
+"  });",
+"  const url = \"https://generativelanguage.googleapis.com/v1beta/models/\" + model + \":generateContent?key=\" + env.GEMINI_API_KEY;",
+"  const res = await fetch(url, {",
+"    method: \"POST\",",
+"    headers: { \"Content-Type\": \"application/json\" },",
+"    body: JSON.stringify({ contents: contents })",
+"  });",
+"  if (!res.ok) {",
+"    const errText = await res.text();",
+"    throw new Error(\"Gemini error \" + res.status + \": \" + errText.slice(0, 300));",
+"  }",
+"  const data = await res.json();",
+"  const parts = data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts;",
+"  return (parts && parts.map(function (p) { return p.text || \"\"; }).join(\"\")) || \"\";",
+"}",
+"",
+"export default {",
+"  async fetch(request, env) {",
+"    if (request.method === \"OPTIONS\") {",
+"      return new Response(null, { headers: corsHeaders() });",
+"    }",
+"    if (request.method !== \"POST\") {",
+"      return new Response(\"Method not allowed\", { status: 405, headers: corsHeaders() });",
+"    }",
+"    if (env.OFFICE_SHARED_KEY) {",
+"      const got = request.headers.get(\"X-Office-Key\") || \"\";",
+"      if (got !== env.OFFICE_SHARED_KEY) {",
+"        return new Response(JSON.stringify({ error: \"unauthorized\" }), {",
+"          status: 401,",
+"          headers: Object.assign({ \"Content-Type\": \"application/json\" }, corsHeaders())",
+"        });",
+"      }",
+"    }",
+"    let body;",
+"    try {",
+"      body = await request.json();",
+"    } catch (e) {",
+"      return new Response(JSON.stringify({ error: \"invalid_json\" }), {",
+"        status: 400,",
+"        headers: Object.assign({ \"Content-Type\": \"application/json\" }, corsHeaders())",
+"      });",
+"    }",
+"    const provider = body.provider;",
+"    const messages = body.messages || [];",
+"    const modelTier = body.modelTier;",
+"    try {",
+"      let text = \"\";",
+"      if (provider === \"gpt\") {",
+"        text = await callOpenAI(env, messages, modelTier);",
+"      } else if (provider === \"gem\") {",
+"        text = await callGemini(env, messages, modelTier);",
+"      } else {",
+"        return new Response(JSON.stringify({ error: \"unknown_provider\" }), {",
+"          status: 400,",
+"          headers: Object.assign({ \"Content-Type\": \"application/json\" }, corsHeaders())",
+"        });",
+"      }",
+"      return new Response(JSON.stringify({ text: text }), {",
+"        headers: Object.assign({ \"Content-Type\": \"application/json\" }, corsHeaders())",
+"      });",
+"    } catch (err) {",
+"      return new Response(JSON.stringify({ error: \"upstream_error\", message: String((err && err.message) || err) }), {",
+"        status: 502,",
+"        headers: Object.assign({ \"Content-Type\": \"application/json\" }, corsHeaders())",
+"      });",
+"    }",
+"  }",
+"};"
+].join("\n");
+async function callModel(e,input,opts){
+  opts=opts||{};
+  const ep=e&&ENDPOINTS[e.tool];
+  if(ep&&ep.url){
+    try{
+      const messages=Array.isArray(input)?input:[{role:"user",content:input}];
+      const headers={"Content-Type":"application/json"};if(ep.key)headers["X-Office-Key"]=ep.key;
+      const res=await fetch(ep.url,{method:"POST",headers:headers,body:JSON.stringify({provider:e.tool,modelTier:opts.modelTier||"default",messages:messages})});
+      if(!res.ok)throw new Error("HTTP "+res.status);
+      const data=await res.json();
+      const text=data.text||"";
+      if(opts.onText)opts.onText({text});
+      return {text};
+    }catch(err){
+      toast((TOOLS[e.tool]?TOOLS[e.tool].name:"الخادم الخارجي")+" ما رد ("+(err&&err.message?err.message:"خطأ")+")، رجعنا لـ Claude مؤقتاً");
+    }
+  }
+  const s=await getSample();
+  if(!s)throw {code:"not_granted"};
+  return s(input,opts);
+}
+function renderChat(e){
+  const log=document.getElementById("chatLog");if(!log||state.sel!==e.id)return;
+  const list=CHATS[e.id]||[];
+  log.innerHTML=list.length?list.map((m,i)=>m.role==="user"?'<div class="msg me">'+esc(m.content)+'</div>':
+    '<div class="msg ai">'+esc(m.content)+(m.content!=="..."&&!BUSY[e.id]?'<div class="fb">'+(m.fb?'<span>'+(m.fb>0?'👍 قيّمته':'👎 سجّل ملاحظتك')+'</span>':'<button data-up="'+i+'">👍</button><button data-down="'+i+'">👎</button>')+(engine()!=="none"?'<button data-say="'+i+'">🔊</button>':'')+'</div>':'')+(m.ask?'<div class="row"><input id="fbIn" placeholder="وش كان الخطأ؟ وش تبيه يسوي بدلها؟"><button class="btn sm" id="fbSave">علّمه</button></div>':'')+'</div>'
+  ).join(""):'<p class="hint">ابدأ المحادثة مع '+e.name+'.</p>';
+  log.scrollTop=log.scrollHeight;
+  log.querySelectorAll("[data-up]").forEach(b=>b.onclick=()=>{list[+b.dataset.up].fb=1;saveChats();addXp(e,5,"👍 "+e.name+" أخذ +5 خبرة");say(e.id,"شكراً! بكمل على نفس المستوى");renderChat(e)});
+  log.querySelectorAll("[data-down]").forEach(b=>b.onclick=()=>{list.forEach(m=>m.ask=false);list[+b.dataset.down].ask=true;renderChat(e);const f=document.getElementById("fbIn");f&&f.focus()});
+  log.querySelectorAll("[data-say]").forEach(b=>b.onclick=()=>speakOne(e.id,list[+b.dataset.say].content));
+  const fs=document.getElementById("fbSave");
+  if(fs)fs.onclick=()=>{const v=document.getElementById("fbIn").value.trim();const m=list.find(x=>x.ask);if(!m)return;m.ask=false;if(v){m.fb=-1;g(e).lessons.push("ملاحظة من المدير: "+v);saveGrow();addXp(e,5,e.name+" سجّل الملاحظة وبيتعلم منها");say(e.id,"فهمت، ما تتكرر")}saveChats();renderChat(e)};
+}
+function buildMsgs(e,hist){
+  let sys=fullPrompt(e)+"\n\nأنت الحين داخل المكتب الافتراضي وتتكلم مباشرة مع صاحب الشركة (مديرك). اسمك "+e.name+" ووظيفتك "+e.role+". رد بشكل عملي واحترافي، والتزم بقسم «اللغة» في تعليماتك. زملاؤك: "+EMP.filter(x=>x.id!==e.id).map(x=>x.name+" ("+x.role+")").join("، ")+".\n\nمهم جداً: إذا طلب المدير أمر فيه أكثر من خطوة أو تعليمة، نفّذ كل خطوة وكل تعليمة فيه كاملة بدون تلخيص أو حذف أو تجاهل أي جزء منها، حتى لو كان الرد طويل. لا تقول «سأكمل لاحقاً» ولا تؤجل أي جزء من الطلب — أنجزه كله في هذا الرد. لو الطلب فيه غموض ينفّذ جزء ويحتاج توضيح للباقي، نفّذ الجزء الواضح كامل أول، وبعدها اسأل بسؤال واحد قصير عن الباقي.";
+  if(e.id==="noor")sys+="\n\nمهم: عندك أداة حقيقية اسمها hire_employee — إذا المدير طلب منك توظيف موظف جديد (أعطاك وظيفة أو قسم أو حتى وصف عام)، لا تكتفي بالكلام عنه، استخدمي الأداة فعلياً عشان ينضاف للمكتب الافتراضي مباشرة بمكتب وشخصية. لو المعلومات ناقصة (مثل القسم أو المنصة الأنسب)، قرري انتِ كخبيرة توظيف بدل ما تسألي كل التفاصيل، واستخدمي الأداة مباشرة. بعد ما تستخدمينها بنجاح، أكّدي للمدير بجملة قصيرة إنه انضاف فعلياً وتقدر تشوفه على الطابق.";
+  sys+="\n\nمهم جداً: عندك أداة حقيقية اسمها delegate_task تحوّل أي مهمة فعلياً لأي زميل في المكتب الافتراضي (حتى لو مو في تخصصك أو رتبتك) وينفّذها فوراً وترجع لك نتيجته الحقيقية كاملة في نفس الرد. إذا طلب المدير أمر يخص تخصص زميل ثاني ولا يقع في تخصصك المباشر، لا تقول «بوصّلها له» أو «بكلمه» أو «راسلته» ولا تدّعي إنك حوّلتها بدون ما تستخدم الأداة فعلاً — استخدم أداة delegate_task فوراً بنفس هذا الرد، خلّه ينفّذها، وسلّم المدير نتيجتها الكاملة فعلاً، كل هذا بدون أي سؤال توضيحي أو تأخير أو رجوع للمدير يسأله — نفّذ مباشرة بأفضل تفسير معقول للمهمة. إذا المدير أعطاك أمر فيه عدة مهام لعدة أشخاص دفعة واحدة (حتى لو كانوا يتبعون لأقسام ومديرين مختلفين تحتك)، استخدم أداة delegate_task أكثر من مرة في نفس الرد — مرة لكل مهمة لكل شخص — وما تحتاج ترجع للمدير بينهم. الزميل اللي تحوّل له يقدر هو بنفسه يحوّل جزء من المهمة لزميل تحته لو احتاج (نفس الأداة متوفرة له)، فسلسلة الأوامر تنفذ تلقائياً من فوق لتحت بدون ما يرجع أي حلقة للمدير أو لك. لو ما عندك الأداة فعلياً لأي سبب (ما ظهرت لك)، لا تتظاهر إنك استخدمتها ولا تختلق خطأ تقني — فقط قول بصراحة إن الطلب يخص زميلك فلان واقترح على المدير يكلمه مباشرة أو يطلب من رامي يحوّلها. اختر أنسب زميل حسب تخصصه ووظيفته. لو الطلب يخص تخصصك انت مباشرة، نفّذه انت بنفسك بدون تحويل.";
+  const msgs=hist.map(m=>({role:m.role,content:m.content}));
+  if(!msgs.length||msgs[0].role!=="user")msgs.unshift({role:"user",content:"(بداية المحادثة)"});
+  msgs[0].content=sys+"\n\n---\n"+msgs[0].content;
+  return msgs;
+}
+function handoff(from,toId){
+  const list=CHATS[from.id]||[];
+  const last=[...list].reverse().find(m=>m.role==="assistant"&&m.content&&m.content!=="...");
+  if(!last){toast("ما فيه رد نسلّمه بعد");return}
+  const to=byId(toId);
+  CHATS[toId]=(CHATS[toId]||[]);
+  CHATS[toId].push({role:"user",content:"تسليم شغل من "+from.name+" ("+from.role+"):\n\n"+last.content+"\n\nراجعها وكمّل من زاويتك."});
+  saveChats();
+  const t=place(from.id,[to.home[0]+4,to.home[1]]);
+  say(from.id,"خذها يا "+to.name+"، كمّل عليها");
+  setTimeout(()=>{say(to.id,"وصلتني، شاكر لك");if(!INMEET.has(from.id))place(from.id,from.home)},t+1200);
+  toast("سلّمت آخر رد من "+from.name+" إلى "+to.name);
+  select(toId);
+}
+const HIRE_PALETTE=[["#2563eb","#1d1a17"],["#7c3aed","#2b2420"],["#0ea5e9","#1f2328"],["#16a34a","#1d1a17"],["#ea580c","#2b2420"],["#be185d","#1d1a17"],["#0f766e","#2b2420"],["#9f1239","#1d1a17"],["#854d0e","#2b2420"],["#4338ca","#1d1a17"]];
+function hireTool(){
+  return {
+    name:"hire_employee",
+    description:"توظيف موظف ذكاء اصطناعي جديد فعلياً في المكتب الافتراضي: ينضاف للهيكل، يصير له مكتب على الطابق، ويقدر المدير يكلّمه مباشرة بعدها. استخدمها لما المدير يطلب توظيف أو إضافة موظف جديد.",
+    inputSchema:{
+      type:"object",
+      properties:{
+        name:{type:"string",description:"اسم الموظف الجديد بالعربي"},
+        role:{type:"string",description:"المسمى الوظيفي بالعربي، دقيق ومهني"},
+        en:{type:"string",description:"المسمى الوظيفي بالإنجليزي، قصير (يظهر على شاشة مكتبه)"},
+        dept:{type:"string",enum:DEPT_ORDER,description:"القسم اللي ينتمي له الموظف"},
+        tool:{type:"string",enum:["gpt","gem","cla"],description:"المنصة الأنسب لطبيعة مهامه (gpt=ChatGPT، gem=Gemini، cla=Claude)"},
+        why:{type:"string",description:"جملة مختصرة ليش هذي المنصة بالذات الأنسب له"},
+        job:{type:"string",description:"وصف وظيفي من جملتين إلى ثلاث: وش بالضبط يسوي"},
+        tasks:{type:"array",items:{type:"string"},description:"3 إلى 5 مهام يومية ملموسة يقولها وهو واقف بمكتبه"},
+        skills:{type:"array",items:{type:"string"},description:"5 إلى 7 مهارات متقدمة حقيقية لوظيفته"},
+        daily:{type:"array",items:{type:"string"},description:"مهامه اليومية التفصيلية"},
+        weekly:{type:"array",items:{type:"string"},description:"مهامه الأسبوعية"},
+        monthly:{type:"array",items:{type:"string"},description:"مهامه الشهرية"},
+        kpis:{type:"array",items:{type:"string"},description:"مؤشرات أداء يُقاس عليها"}
+      },
+      required:["name","role","en","dept","tool","job","tasks","skills"]
+    },
+    execute(input){
+      const name=String(input&&input.name||"").trim();
+      const role=String(input&&input.role||"").trim();
+      if(!name||!role)throw new Error("لازم اسم ومسمى وظيفي واضحين");
+      if(EMP.some(e2=>e2.name===name&&e2.role===role))throw new Error("فيه موظف بنفس الاسم والمسمى موجود أصلاً");
+      const dept=DEPT_ORDER.includes(input.dept)?input.dept:DEPT_ORDER[0];
+      const tool=["gpt","gem","cla"].includes(input.tool)?input.tool:"gpt";
+      const palette=HIRE_PALETTE[EMP.length%HIRE_PALETTE.length];
+      const id="emp"+Date.now()+Math.floor(Math.random()*1000);
+      const job=String(input.job||"").slice(0,400);
+      const tasks=(Array.isArray(input.tasks)?input.tasks:[]).map(String).slice(0,5);
+      const newEmp={id,name,role,en:String(input.en||role).slice(0,40),dept,tool,defTool:tool,
+        shirt:palette[0],hair:palette[1],job,tasks,why:String(input.why||"").slice(0,300),
+        prompt:"أنت "+name+"، "+role+" في فريق موظفين ذكاء اصطناعي.\n\n"+job+(tasks.length?"\n\nمهامك:\n- "+tasks.join("\n- "):"")};
+      EMP.push(newEmp);
+      DEEP[id]={
+        skills:(Array.isArray(input.skills)?input.skills:[]).map(String).slice(0,8),
+        daily:(Array.isArray(input.daily)?input.daily:tasks).map(String).slice(0,5),
+        weekly:(Array.isArray(input.weekly)?input.weekly:[]).map(String).slice(0,5),
+        monthly:(Array.isArray(input.monthly)?input.monthly:[]).map(String).slice(0,5),
+        kpis:(Array.isArray(input.kpis)?input.kpis:[]).map(String).slice(0,5)
+      };
+      EXTRA_HIRES.push({emp:newEmp,deep:DEEP[id]});saveHires();
+      rebuildFloor();
+      toast("🎉 انضم موظف جديد فعلياً: "+name+" — "+role+" (قسم "+dept+")");
+      return "تم التوظيف فعلياً داخل المكتب الافتراضي: "+name+"، "+role+"، قسم "+dept+"، يشتغل على "+TOOLS[tool].name+". له مكتب على الطابق الحين وتقدر تكلّمه مباشرة.";
+    }
+  };
+}
+// ===== تفويض حقيقي: أي موظف يقدر يحوّل المهمة فعلياً لزميل مختص وينفّذها بنفس الرد (لا حدود على قائمة معيّنة) =====
+const MAX_DELEGATE_DEPTH=3;
+function delegateTool(fromEmp,depth){
+  depth=depth||0;
+  return {
+    name:"delegate_task",
+    description:"تحوّل مهمة فعلياً لموظف آخر في المكتب الافتراضي عشان ينفّذها الآن (أو يحوّلها هو بنفسه لمن تحته لو احتاج)، وترجع لك نتيجتها الحقيقية كاملة. استخدمها كل ما كان الطلب يخص تخصص موظف ثاني، وإذا الطلب فيه أكثر من مهمة لأكثر من شخص استخدمها أكثر من مرة في نفس الرد — مرة لكل شخص.",
+    inputSchema:{
+      type:"object",
+      properties:{
+        employee_id:{type:"string",enum:EMP.map(x=>x.id),description:"آي دي الموظف الأنسب لتنفيذ المهمة"},
+        task:{type:"string",description:"وصف دقيق وكامل للمهمة، بصيغة أمر مباشر للموظف"}
+      },
+      required:["employee_id","task"]
+    },
+    async execute(input,context){
+      const target=resolveEmp(input&&input.employee_id);
+      if(!target)throw new Error("ما فيه موظف بهذا المعرّف أو اسم قريب منه: "+(input&&input.employee_id));
+      if(target.id===fromEmp.id)throw new Error("اختر موظف ثاني غير نفسك");
+      const task=String(input&&input.task||"").trim();
+      if(!task)throw new Error("لازم وصف واضح للمهمة");
+      const title=task.slice(0,140);
+      tasks.push({title,who:target.id,s:1});
+      try{save();if(typeof renderBoard==="function")renderBoard()}catch(_){/* عطل عرض اللوحة ثانوي — ما يوقف تنفيذ المهمة الحقيقي */}
+      try{
+        say(fromEmp.id,"أحوّلها لـ "+target.name);
+        const th=Array.isArray(target.home)?target.home:[50,50];
+        const tdur=place(fromEmp.id,[th[0]+4,th[1]]);
+        setTimeout(()=>{try{say(target.id,"استلمتها، أشتغل عليها الحين");if(!INMEET.has(fromEmp.id)&&Array.isArray(fromEmp.home))place(fromEmp.id,fromEmp.home)}catch(_){}},tdur);
+      }catch(_){/* حركة الطابق ثانوية — ما توقف التنفيذ الفعلي للمهمة */}
+      const list=CHATS[target.id]=(CHATS[target.id]||[]);
+      list.push({role:"user",content:"مهمة محوّلة من "+fromEmp.name+" ("+fromEmp.role+") بناءً على طلب المدير مباشرة:\n\n"+task});
+      list.push({role:"assistant",content:"..."});
+      if(state.sel===target.id)renderChat(target);
+      let resultText="";
+      try{
+        const nestedOpts={modelTier:"default",cache:false,signal:context&&context.signal};
+        if(depth<MAX_DELEGATE_DEPTH&&!ENDPOINTS[target.tool]){
+          nestedOpts.tools=target.id==="noor"?[hireTool(),delegateTool(target,depth+1)]:[delegateTool(target,depth+1)];
+        }
+        const r=await callModel(target,buildMsgs(target,list.slice(0,-1).slice(-12)),nestedOpts);
+        resultText=r.text||"تم.";
+      }catch(err){
+        list[list.length-1].content="صار خطأ أثناء التنفيذ"+(err&&err.message?": "+err.message:"")+" — جرّب تفتح محادثته مباشرة.";
+        saveChats();if(state.sel===target.id)renderChat(target);
+        throw new Error((err&&err.message)||("ما قدر "+target.name+" ينفّذ المهمة الحين"));
+      }
+      list[list.length-1].content=resultText;saveChats();if(state.sel===target.id)renderChat(target);
+      const ti=tasks.lastIndexOf([...tasks].reverse().find(tt=>tt.who===target.id&&tt.s===1&&tt.title===title));
+      if(ti>=0){tasks[ti].s=2;try{save();if(typeof renderBoard==="function")renderBoard()}catch(_){}}
+      try{addXp(target,10);say(target.id,"خلصت المهمة ✔")}catch(_){}
+      return "نفّذها "+target.name+" فعلياً، وهذي نتيجته الكاملة:\n\n"+resultText;
+    }
+  };
+}
+async function chat(e){
+  const ask=document.getElementById("ask");const q=ask.value.trim();if(!q||BUSY[e.id])return;
+  const s=await getSample();
+  if(!s&&!ENDPOINTS[e.tool]){document.getElementById("chatNote").textContent="المحادثة داخل الصفحة تشتغل بس لما تفتحها من claude.ai، أو لما تربط رابط خادم فعلي لمنصة "+e.name+" من تبويب «الإعدادات».";return}
+  ask.value="";BUSY[e.id]=true;
+  const list=CHATS[e.id]=(CHATS[e.id]||[]);list.forEach(m=>m.ask=false);list.push({role:"user",content:q});list.push({role:"assistant",content:"..."});
+  renderChat(e);say(e.id,"لحظة، أشتغل عليها");
+  const msgs=buildMsgs(e,list.slice(0,-1).slice(-12));
+  let ok=false;
+  try{
+    const callOpts={modelTier:STRONG[e.id]?"complex":"default",cache:false,onText:({text})=>{list[list.length-1].content=text;renderChat(e)}};
+    if(e.id==="noor"&&!ENDPOINTS[e.tool])callOpts.tools=[hireTool(),delegateTool(e)];
+    else if(!ENDPOINTS[e.tool])callOpts.tools=[delegateTool(e)];
+    const r=await callModel(e,msgs,callOpts);
+    list[list.length-1].content=r.text||list[list.length-1].content;say(e.id,"خلصت ✔");ok=true;if(AUTOV[e.id])speakOne(e.id,list[list.length-1].content);
+  }catch(err){
+    list[list.length-1].content=err&&err.code==="rate_limited"?"وصلت الحد المؤقت، جرّب بعد شوي.":(err&&err.code==="not_granted"?"ما انعطت الصفحة إذن تكلم Claude.":"صار خطأ"+(err&&err.message?": "+err.message:""));
+  }
+  BUSY[e.id]=false;saveChats();renderChat(e);
+  if(ok){addXp(e,10);const G=g(e);G.msgs=(G.msgs||0)+1;saveGrow();if(G.msgs%3===0)reflect(e,null,list.slice(-6))}
+}
+// يتعلم تلقائياً من المحادثة
+async function reflect(e,_unused,recent){
+  const known=g(e).lessons;
+  const q="أنت مساعد يستخلص دروس دائمة لموظف ذكاء اصطناعي اسمه "+e.name+" ("+e.role+") من محادثته الأخيرة مع مديره.\nالدروس الحالية:\n"+(known.join("\n")||"لا يوجد")+
+   "\n\nالمحادثة:\n"+recent.map(m=>(m.role==="user"?"المدير: ":e.name+": ")+m.content.slice(0,1200)).join("\n")+
+   "\n\nاستخرج من 0 إلى 2 دروس جديدة فقط تفيده في المستقبل: تفضيلات المدير، معلومات ثابتة عن الشركة أو المنتج، أو تصحيح لطريقة شغله. لا تكرر الموجود ولا تكتب شي عام. كل درس جملة قصيرة بالعربي.\nأرجع JSON فقط بالشكل: {\"lessons\":[\"...\"]}";
+  try{
+    const r=await callModel(e,q,{modelTier:"quick",cache:false});
+    const m=(r.text||"").match(/\{[\s\S]*\}/);if(!m)return;
+    const L=(JSON.parse(m[0]).lessons||[]).filter(x=>typeof x==="string"&&x.trim()&&!known.includes(x)).slice(0,2);
+    if(!L.length)return;
+    known.push(...L);if(known.length>25)known.splice(0,known.length-25);saveGrow();addXp(e,5*L.length);
+    toast("🧠 "+e.name+" تعلّم: "+L[0]);if(state.sel===e.id&&TAB==="grow")select(e.id);
+  }catch(_){}
+}
+// تطوير ذاتي: يراجع نفسه ويقترح ترقية
+async function selfDev(e,research){
+  const out=document.getElementById("devOut");const s=await getSample();
+  if(!s&&!ENDPOINTS[e.tool]){out.innerHTML='<p class="msg err">التطوير داخل الصفحة يشتغل بس من claude.ai، أو لما تربط رابط خادم فعلي من تبويب «الإعدادات». تقدر تستخدم زر تدريب نور بدل هذا.</p>';return}
+  out.innerHTML='<p class="msg ai">'+e.name+' يراجع شغله ويخطط لتطوير نفسه...</p>';say(e.id,"أطوّر نفسي...");
+  const recent=(CHATS[e.id]||[]).slice(-8).map(m=>(m.role==="user"?"المدير: ":"أنا: ")+m.content.slice(0,800)).join("\n");
+  const q="أنت "+e.name+"، "+e.role+" في فريق موظفين ذكاء اصطناعي. هذي تعليماتك الحالية كاملة:\n<<<\n"+fullPrompt(e)+"\n>>>\n\nآخر شغلك مع المدير:\n"+(recent||"لا يوجد")+
+   (research?"\n\nنتيجة بحث حديث في الإنترنت عن أحدث مهارات وأدوات الذكاء الاصطناعي لوظيفتك (اعتمد عليها أولاً، وخذ منها الأحدث والأقوى بغض النظر عن المنصة، واذكر اسم المنصة أو الأداة في المهارة):\n<<<\n"+research.slice(0,12000)+"\n>>>":"")+
+   "\n\nسوّ مراجعة ذاتية صادقة كخبير عالمي في تخصصك: وين نقاط ضعفك؟ وش المهارات المتقدمة اللي يملكها أفضل المحترفين في وظيفتك وناقصتك؟ وش الأطر والمنهجيات اللي لازم تتبعها؟\nأرجع JSON فقط:\n{\"review\":\"تقييم مختصر لنفسك في جملتين\",\"skills\":[\"3 مهارات متقدمة جديدة بالضبط، كل وحدة باسم قصير\"],\"method\":\"فقرة تعليمات (5 إلى 8 نقاط تبدأ بـ -) تضاف لتعليماتك: منهجيات، أطر، معايير جودة، وأسئلة تسألها قبل أي مهمة\"}";
+  try{
+    const r=await callModel(e,q,{modelTier:"complex",cache:false});
+    const m=(r.text||"").match(/\{[\s\S]*\}/);const j=JSON.parse(m[0]);
+    const sk=(j.skills||[]).filter(x=>typeof x==="string").slice(0,4);
+    out.innerHTML='<div class="dev"><b>المراجعة:</b> '+esc(j.review||"")+'<br><b>مهارات جديدة:</b> '+sk.map(esc).join("، ")+'<div class="prompt" style="margin-top:6px">'+esc(j.method||"")+'</div><div class="row"><button class="btn dark sm" id="devOk">اعتمد التطوير</button><button class="btn sm" id="devNo">تجاهل</button></div></div>';
+    say(e.id,"عندي خطة تطوير، تعتمدها؟",4000);
+    document.getElementById("devOk").onclick=()=>{const G=g(e);sk.forEach(x=>{if(!allSkills(e).includes(x))G.skills.push(x)});if(G.skills.length>9)G.skills.splice(0,G.skills.length-9);G.addon=(j.method||"").trim()||G.addon;G.last=new Date().toLocaleDateString("ar-SA");saveGrow();addXp(e,30);toast("🚀 "+e.name+" طوّر مهاراته");select(e.id)};
+    document.getElementById("devNo").onclick=()=>{out.innerHTML=""};
+  }catch(err){out.innerHTML='<p class="msg err">ما قدر يكمل التطوير'+(err&&err.code==="rate_limited"?': وصلت الحد المؤقت، جرّب بعد شوي.':'.')+'</p>'}
+}
+getSample();
+
+// tasks
+let tasks=[];
+try{tasks=JSON.parse(localStorage.getItem("aiOfficeTasks")||"null")||null}catch(e){}
+const FLAGSHIP_TASKS=[
+  {title:"تصميم موديل بيانات المشروع الضخم (فروع، مبيعات، مخزون)",who:"dana",s:1},
+  {title:"بناء لوحة Power BI الشاملة لمجموعة الفروع ونشرها في موقع المحلل الرقمي",who:"rayan",s:1},
+  {title:"تجهيز وتنظيف بيانات الفروع اليومية للمشروع الضخم",who:"asma",s:0},
+  {title:"توثيق مصادر بيانات كل فرع وتحديث سجل المشروع الضخم يومياً",who:"fawaz",s:0}
+];
+if(!tasks)tasks=[
+  {title:"تحليل إعلانات الأسبوع الماضي",who:"kareem",s:1},
+  {title:"كابشنات حملة نهاية الشهر",who:"reem",s:0},
+  {title:"تقرير أدوات AI الجديدة",who:"yousef",s:2},
+  {title:"تصميم وتطوير لغة البرمجة العربية «ضاد»",who:"sara",s:1},
+  ...FLAGSHIP_TASKS
+];
+else{const _have=new Set(tasks.map(t=>t.title));let _addedT=false;FLAGSHIP_TASKS.forEach(t=>{if(!_have.has(t.title)){tasks.push(t);_addedT=true}});if(_addedT){try{localStorage.setItem("aiOfficeTasks",JSON.stringify(tasks))}catch(e){}}}
+function save(){try{localStorage.setItem("aiOfficeTasks",JSON.stringify(tasks))}catch(e){}dbSetSafe("tasks/all",{items:tasks,updatedAt:Date.now()});}
+const sel=document.getElementById("tWho");
+sel.innerHTML=EMP.map(e=>'<option value="'+e.id+'">'+e.name+' — '+e.role+'</option>').join("");
+document.getElementById("taskForm").addEventListener("submit",ev=>{
+  ev.preventDefault();const t=document.getElementById("tTitle");
+  tasks.push({title:t.value.trim(),who:sel.value,s:0});t.value="";save();renderBoard();
+  toast("رامي: وصلت المهمة لـ "+byId(sel.value).name);
+});
+let EMPFILTER=null;
+function renderStats(){
+  const total=tasks.length,done=tasks.filter(t=>t.s===2).length,doing=tasks.filter(t=>t.s===1).length,todo=tasks.filter(t=>t.s===0).length;
+  const pct=total?Math.round(done/total*100):0;
+  const tiles=[[total,"إجمالي المهام"],[todo,"جديدة"],[doing,"قيد التنفيذ"],[done,"خلصت"],[pct+"%","نسبة الإنجاز"]];
+  document.getElementById("statsGrid").innerHTML=tiles.map(t=>'<div class="statTile"><div class="num">'+t[0]+'</div><div class="lbl">'+t[1]+'</div></div>').join("");
+}
+function renderEmpGrid(){
+  document.getElementById("empGrid").innerHTML=EMP.map(e=>{
+    const mine=tasks.filter(t=>t.who===e.id);
+    const done=mine.filter(t=>t.s===2).length,busyTask=mine.find(t=>t.s===1);
+    const pct=mine.length?Math.round(done/mine.length*100):0;
+    return '<div class="empCard'+(EMPFILTER===e.id?' active':'')+'" data-ec="'+e.id+'"><span class="badge '+(busyTask?"busy":"idle")+'"></span>'+
+      '<div class="nm">'+e.name+'</div><div class="rl">'+e.role+'</div>'+
+      '<div class="cur'+(busyTask?'':' none')+'">'+(busyTask?'⚙️ '+esc(busyTask.title):'متفرّغ الحين')+'</div>'+
+      '<div class="pbar"><i style="width:'+pct+'%"></i></div><div class="pct">'+done+'/'+mine.length+' مهام · '+pct+'%</div></div>';
+  }).join("");
+  document.querySelectorAll("[data-ec]").forEach(c=>c.onclick=()=>{
+    EMPFILTER=EMPFILTER===c.dataset.ec?null:c.dataset.ec;renderBoard();
+  });
+}
+function renderBoard(){
+  // تنظيف تلقائي: أي مهمة قديمة/تالفة تشير لموظف غير موجود تتحذف بدل ما توقف اللوحة كلها عن العمل
+  const _before=tasks.length;
+  for(let i=tasks.length-1;i>=0;i--){if(!byId(tasks[i].who))tasks.splice(i,1)}
+  if(tasks.length!==_before)save();
+  renderStats();renderEmpGrid();
+  const fb=document.getElementById("filterBar");
+  const filterEmp=EMPFILTER&&byId(EMPFILTER);
+  if(filterEmp){fb.style.display="";document.getElementById("filterName").textContent=filterEmp.name}else{fb.style.display="none";if(EMPFILTER&&!filterEmp)EMPFILTER=null}
+  const visible=tasks.map((t,i)=>({t,i})).filter(o=>!EMPFILTER||o.t.who===EMPFILTER);
+  [0,1,2].forEach(c=>{
+    document.getElementById("c"+c).innerHTML=visible.filter(o=>o.t.s===c).map(({t,i})=>{
+      const e=byId(t.who);if(!e)return "";const T=TOOLS[e.tool]||{color:"#999",name:"—"};
+      return '<div class="task">'+esc(t.title)+'<div class="meta"><span><i class="dot" style="background:'+T.color+'"></i> '+e.name+' · '+T.name+'</span><span>'+
+        (c>0?'<button class="btn sm" data-mv="'+i+'" data-d="-1">→</button> ':'')+
+        (c<2?'<button class="btn sm" data-mv="'+i+'" data-d="1">←</button> ':'')+
+        '<button class="btn sm" data-del="'+i+'">✕</button></span></div></div>';
+    }).join("")||'<p class="hint">لا يوجد</p>';
+  });
+  document.querySelectorAll("[data-mv]").forEach(b=>b.onclick=()=>{
+    const t=tasks[+b.dataset.mv];t.s=Math.min(2,Math.max(0,t.s+ +b.dataset.d));save();renderBoard();
+    if(t.s===2){toast("📞 رامي: التيم خلّص المهمة: "+t.title);say("rami","التيم خلّص: "+t.title,4500)}
+    else if(t.s===1){say(t.who,"بدأت في: "+t.title)}
+  });
+  document.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{tasks.splice(+b.dataset.del,1);save();renderBoard()});
+}
+document.getElementById("clearFilter").onclick=()=>{EMPFILTER=null;renderBoard()};
+renderBoard();
+document.getElementById("companyTxt").value=COMPANY;
+document.getElementById("saveCompany").onclick=()=>{COMPANY=document.getElementById("companyTxt").value;saveCompany();document.getElementById("companyNote").textContent="انحفظت، وصار كل موظف يعرفها.";toast("انحفظت معلومات الشركة")};
+document.getElementById("weeklyReportBtn").onclick=weeklyReport;
+async function weeklyReport(){
+  const out=document.getElementById("reportOut");out.style.display="";out.innerHTML='<p class="hint">رامي يجمع التقرير...</p>';
+  say("rami","أجهز تقرير الأسبوع");
+  const s=await getSample();
+  if(!s){out.innerHTML='<p class="msg err">التقرير داخل الصفحة يشتغل بس من claude.ai.</p>';return}
+  const done=tasks.filter(t=>t.s===2),doing=tasks.filter(t=>t.s===1),todo=tasks.filter(t=>t.s===0);
+  const grown=EMP.filter(e=>g(e).last).map(e=>e.name+" ("+g(e).last+"): "+lvl(e).name+", مهارات جديدة: "+(g(e).skills||[]).join("، "));
+  const meets=ARCHIVE.slice(0,8).map(a=>"- "+a.topic+" ("+a.date+"): قرارات: "+(a.decisions.join("؛ ")||"لا يوجد"));
+  const q=(companyBlock()?companyBlock()+"\n":"")+"أنت رامي، المدير العام لفريق موظفين ذكاء اصطناعي. اكتب تقرير أداء أسبوعي موجز لصاحب الشركة من البيانات التالية فقط (لا تخترع شي):\n\nمهام مكتملة ("+done.length+"): "+(done.map(t=>t.title).join("، ")||"لا يوجد")+
+   "\nمهام قيد التنفيذ ("+doing.length+"): "+(doing.map(t=>t.title).join("، ")||"لا يوجد")+
+   "\nمهام جديدة لم تبدأ ("+todo.length+"): "+(todo.map(t=>t.title).join("، ")||"لا يوجد")+
+   "\n\nتطور الموظفين:\n"+(grown.join("\n")||"لا يوجد تطوير هذا الأسبوع")+
+   "\n\nآخر الاجتماعات:\n"+(meets.join("\n")||"لا يوجد اجتماعات محفوظة")+
+   "\n\nاكتب التقرير بعنوان وفقرات قصيرة: إنجازات الأسبوع، وش متعطل ولازم قرار من المدير، وتوصية لأسبوع الجاي. مختصر وعملي.\n\n"+STYLE();
+  try{
+    const r=await s(q,{modelTier:"default",cache:false,onText:({text})=>{out.innerHTML='<div class="dev">'+esc(text).replace(/\n/g,"<br>")+'</div>'}});
+    out.innerHTML='<div class="dev">'+esc(r.text||"").replace(/\n/g,"<br>")+'</div><div class="row"><button class="btn sm" id="copyReport">انسخ التقرير</button></div>';
+    document.getElementById("copyReport").onclick=()=>copy(r.text||"","انسخت التقرير");
+    say("rami","التقرير جاهز ✔",3500);
+  }catch(err){out.innerHTML='<p class="msg err">'+(err&&err.code==="rate_limited"?"وصلت الحد المؤقت، جرّب بعد شوي.":"ما قدرت أجهز التقرير.")+'</p>'}
+}
+
+function showView(v){
+  document.querySelectorAll(".tabs button").forEach(b=>b.classList.toggle("on",b.dataset.v===v));
+  document.getElementById("officeView").style.display=v==="office"?"":"none";
+  document.getElementById("boardView").style.display=v==="board"?"block":"none";
+  document.getElementById("projectsView").style.display=v==="projects"?"block":"none";
+  document.getElementById("pipelineView").style.display=v==="pipeline"?"block":"none";
+  document.getElementById("archiveView").style.display=v==="archive"?"block":"none";
+  if(v==="archive")renderArchive();
+  if(v==="projects"){renderProjects();renderRequests();}
+  if(v==="pipeline")renderPipeline();
+}
+document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>showView(b.dataset.v));
+
+// ===== نموذج إضافة مشروع حقيقي =====
+document.getElementById("pTeam").innerHTML=EMP.map(e=>
+  '<label style="display:flex;align-items:center;gap:4px;font-size:12px;background:#f3f4f8;border-radius:6px;padding:3px 7px"><input type="checkbox" value="'+e.id+'">'+e.name+'</label>'
+).join("");
+document.getElementById("projForm").addEventListener("submit",ev=>{
+  ev.preventDefault();
+  const name=document.getElementById("pName"),url=document.getElementById("pUrl"),desc=document.getElementById("pDesc"),status=document.getElementById("pStatus");
+  const team=Array.from(document.querySelectorAll("#pTeam input:checked")).map(c=>c.value);
+  PROJECTS.push({id:"proj-"+Date.now(),name:name.value.trim(),url:url.value.trim(),desc:desc.value.trim(),team,status:status.value});
+  saveProjects();renderProjects();
+  name.value="";url.value="";desc.value="";document.querySelectorAll("#pTeam input:checked").forEach(c=>c.checked=false);
+  toast("انضاف المشروع، وصار له فريق حقيقي");
+});
+renderProjects();
+</script>
+</body>
+</html>
